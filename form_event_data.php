@@ -154,6 +154,8 @@ if (isset($_POST['type']) && htmlspecialchars($_POST['type']) != "") {
 
 $exvalue = "Please select exam...";
 
+//Read data for authenticated ATO
+
 $exams = clrjson(api('GET', "http://dev.bpmspace.org:4040/~amade/COMS/api/api.php/v_csvexport_trainingorg_exam?filter[]=coms_training_organisation_id,eq,".$PARTID));
 
 
@@ -173,9 +175,11 @@ $trex = clrjson(api('GET', "http://dev.bpmspace.org:4040/~amade/COMS/api/api.php
 
 
 	var TOID = '<?php echo $PARTID;?>';
+	var run2 = false;
+	var run3 = false;
 	console.log('<?php echo $PARTID;?>');
 	document.addEventListener("DOMContentLoaded", step1);
-	document.addEventListener("DOMContentLoaded", step3);
+	document.addEventListener("DOMContentLoaded", step4);
 		// select exams depending on Training Organisation	
 		function step1() {
 			var exams = <?php echo (json_encode($exams['v_csvexport_trainingorg_exam']));?>;
@@ -188,43 +192,66 @@ $trex = clrjson(api('GET', "http://dev.bpmspace.org:4040/~amade/COMS/api/api.php
 			$.each(trainer, function(index, value) {
 				$firstChoicet.append("<option value='" + value.coms_trainer_id + "'>" + value.coms_trainer_lastname + " " + value.coms_trainer_firstname + "</option>");
 			});
-					};   
+		};   
 		
 
-		function step2() { //  now change trainers depending at TO and Exams			
-			if ($("#sel2").val() == "") {
-				var ttr = <?php echo (json_encode($trex['v_csvexport_trainer_exam']));?>;
+		function step2() { //  now change trainers depending at TO and Exams
+
+			if ($("#sel2").val() == '' || run3 == true) {
+				run3 = false;
 				var trfilt = new Array();
-				$.each(ttr, function(index, value){
-					if (value.coms_exam_id == $("#sel1").val()) {
-						trfilt.push(value);
-					}
-				});
+				
+				if($("#sel1").val() == ''){
+					var trainer = <?php echo (json_encode($trainer['v_csvexport_trainingorg_trainer']));?>;
+					trfilt = trainer;
+				}else {
+					var ttr = <?php echo (json_encode($trex['v_csvexport_trainer_exam']));?>;
+					$.each(ttr, function(index, value){
+						if (value.coms_exam_id == $("#sel1").val()) {
+							trfilt.push(value);} 
+
+
+						});
+				};
 
 				var $secondChoice = $("#sel2");
 				$secondChoice.empty();
-				$secondChoice.append("<option disabled selected value value=''>Please select...</option>");
+				$secondChoice.append("<option selected value value=''>Please select...</option>");
 				$.each(trfilt, function(index, value) {
 					$secondChoice.append("<option value='" + value.coms_trainer_id + "'>" + value.coms_trainer_lastname + " " + value.coms_trainer_firstname + "</option>");
 				});
-			} else {
-				var tex = <?php echo (json_encode($trex['v_csvexport_trainer_exam']));?>;
+			}else{
+				run2 = true;
+			};
+		};
+		function step3() { //  now change trainers depending at TO and Exams			
+			if ($("#sel1").val() == '' || run2 == true){
+				run2 = false;
 				exfilt = new Array();
-				$.each(tex, function(index, value){
-					if (value.coms_trainer_id == $("#sel2").val()) {
-						exfilt.push(value);
-					}
-				});
+				if($("#sel2").val() == ''){
+					var exams = <?php echo (json_encode($exams['v_csvexport_trainingorg_exam']));?>;
+					exfilt = exams;
+				}else {
+					var tex = <?php echo (json_encode($trex['v_csvexport_trainer_exam']));?>;
+					$.each(tex, function(index, value){
+						if (value.coms_trainer_id == $("#sel2").val()) {
+							exfilt.push(value);
+						}  
+					});
+				};
 				var $secondChoice = $("#sel1");
 				$secondChoice.empty();
-				$secondChoice.append("<option disabled selected value value=''>Please select...</option>");
+				$secondChoice.append("<option selected value value=''>Please select...</option>");
 				$.each(exfilt, function(index, value) {
 					$secondChoice.append("<option value='" + value.coms_exam_id + "'>" + value.coms_exam_name + "</option>");
 				});
+			} else{
+				run3 = true;
 			};
 		};
 		
-		function step3() { //just need to select proctor
+		
+		function step4() { //just need to select proctor
 
 			var pctr = <?php echo (json_encode($proctor['v_csvexport_trainingorg_proctor']));?>;
 			var $proctorChoice = $("#sel3");
@@ -315,7 +342,7 @@ $trex = clrjson(api('GET', "http://dev.bpmspace.org:4040/~amade/COMS/api/api.php
 										<label class="col-sm-2" for="sel1">Topic of the exam:<span class="text-danger">*</span></label>
 										<div class="col-sm-6">
 											<select style="padding: 5px 10px; border-radius: 2px; border: 1px solid rgb(216, 222, 228);" class="form-control required" id="sel1" name="type" required onchange="step2()">
-												<option disabled selected value value=''>Please select...</option>
+												<option  selected value value=''>Please select</option>
 
 											</select>
 										</div>
@@ -324,8 +351,8 @@ $trex = clrjson(api('GET', "http://dev.bpmspace.org:4040/~amade/COMS/api/api.php
 									<div class="form-group row">
 										<label class="col-sm-2 control-label">Trainer<span class="text-danger">*</span></label>
 										<div class="col-sm-6">
-											<select style="padding: 5px 10px; border-radius: 2px; border: 1px solid rgb(216, 222, 228);" class="form-control required" id="sel2" name="type" required onchange="step2()">
-												<option disabled selected value value="">Please select topic first...</option>
+											<select style="padding: 5px 10px; border-radius: 2px; border: 1px solid rgb(216, 222, 228);" class="form-control required" id="sel2" name="type" required onchange="step3()">
+												<option  selected value value=''>Please select</option>
 
 											</select>
 										</div>
