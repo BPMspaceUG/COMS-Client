@@ -195,13 +195,13 @@ $trex = clrjson(api('GET', "http://dev.bpmspace.org:4040/~amade/COMS/api/api.php
 		};   
 		
 
-		function step2() { //  now change trainers depending at TO and Exams
+		function ChangedExam() { //  now change exam depending at TO and trainer
 
 			if ($("#sel2").val() == '' || run3 == true) {
 				run3 = false;
 				var trfilt = new Array();
 				
-				if($("#sel1").val() == ''){
+				if($("#sel1").val() == ''){//if reseted to default show default info
 					var trainer = <?php echo (json_encode($trainer['v_csvexport_trainingorg_trainer']));?>;
 					trfilt = trainer;
 				}else {
@@ -213,7 +213,7 @@ $trex = clrjson(api('GET', "http://dev.bpmspace.org:4040/~amade/COMS/api/api.php
 
 						});
 				};
-
+				//set options
 				var $secondChoice = $("#sel2");
 				$secondChoice.empty();
 				$secondChoice.append("<option selected value value=''>Please select...</option>");
@@ -224,11 +224,12 @@ $trex = clrjson(api('GET', "http://dev.bpmspace.org:4040/~amade/COMS/api/api.php
 				run2 = true;
 			};
 		};
-		function step3() { //  now change trainers depending at TO and Exams			
+		function ChangedTrainer() { //  now change trainers depending at TO and Exams			
 			if ($("#sel1").val() == '' || run2 == true){
 				run2 = false;
 				exfilt = new Array();
-				if($("#sel2").val() == ''){
+
+				if($("#sel2").val() == ''){//if reseted to default show default info
 					var exams = <?php echo (json_encode($exams['v_csvexport_trainingorg_exam']));?>;
 					exfilt = exams;
 				}else {
@@ -239,6 +240,7 @@ $trex = clrjson(api('GET', "http://dev.bpmspace.org:4040/~amade/COMS/api/api.php
 						}  
 					});
 				};
+				//set options
 				var $secondChoice = $("#sel1");
 				$secondChoice.empty();
 				$secondChoice.append("<option selected value value=''>Please select...</option>");
@@ -341,7 +343,7 @@ $trex = clrjson(api('GET', "http://dev.bpmspace.org:4040/~amade/COMS/api/api.php
 									<div class="form-group">
 										<label class="col-sm-2" for="sel1">Topic of the exam:<span class="text-danger">*</span></label>
 										<div class="col-sm-6">
-											<select style="padding: 5px 10px; border-radius: 2px; border: 1px solid rgb(216, 222, 228);" class="form-control required" id="sel1" name="type" required onchange="step2()">
+											<select style="padding: 5px 10px; border-radius: 2px; border: 1px solid rgb(216, 222, 228);" class="form-control required" id="sel1" name="type" required onchange="ChangedExam()">
 												<option  selected value value=''>Please select</option>
 
 											</select>
@@ -351,7 +353,7 @@ $trex = clrjson(api('GET', "http://dev.bpmspace.org:4040/~amade/COMS/api/api.php
 									<div class="form-group row">
 										<label class="col-sm-2 control-label">Trainer<span class="text-danger">*</span></label>
 										<div class="col-sm-6">
-											<select style="padding: 5px 10px; border-radius: 2px; border: 1px solid rgb(216, 222, 228);" class="form-control required" id="sel2" name="type" required onchange="step3()">
+											<select style="padding: 5px 10px; border-radius: 2px; border: 1px solid rgb(216, 222, 228);" class="form-control required" id="sel2" name="type" required onchange="ChangedTrainer()">
 												<option  selected value value=''>Please select</option>
 
 											</select>
