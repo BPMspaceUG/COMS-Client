@@ -4,16 +4,6 @@
 <?php
 
 
-/* ************* for testing purpose only, delete before going live ******************************** */
-
-$PARTID_MD5 = "5eaf1b26e33089eadf2d3652262f5dc0";
-
-$PARTID = "773532";
-
-/* ********************************************************************************************* */
-
-
-
 
 
 
@@ -28,16 +18,21 @@ function api($method, $url, $data = false) {
 	$ch = curl_init();
 	curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
 	curl_setopt($ch, CURLOPT_URL, $url);
+		$headers = array();
+		//JWT token for Authentication
+		/************** change following line **********************/
+		$headers[] = 'Authorization: '.$YourTokenHere;
 	if ($data) {
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-		$headers = array();
 		$headers[] = 'Content-Type: application/json';
 		$headers[] = 'Content-Length: ' . strlen($data);
-		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 	}
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 	return curl_exec($ch);
 }
+
+
 function clrjson($input){
 	$jsonObject = json_decode($input, true);
 
@@ -46,10 +41,6 @@ function clrjson($input){
 	return $output;
 }
 
-
-
-	// $object = array('user_id'=>1,'category_id'=>1,'content'=>'from php');
-	// call('POST', 'http://localhost/api.php/posts',json_encode($object));
 
 
 
@@ -90,7 +81,7 @@ if (strlen($submit) > 0) {
 //"login"
 if (isset($_POST['booking-pw'])) {
 	$bookingpw = hash("sha512",htmlspecialchars($_POST['booking-pw']).$PARTID_MD5);
-	$db_content = clrjson(api('GET', "http://dev.bpmspace.org:4040/~amade/COMS/api/api.php/v_csvexport_trainingorg?filter[]=coms_training_organisation_passwd_hash,eq,".$bookingpw));
+	$db_content = clrjson(api('GET', "http://dev.bpmspace.org:4040/~amade/COMS/COMS_client/api.php/v_csvexport_trainingorg?filter[]=coms_training_organisation_passwd_hash,eq,".$bookingpw));
 	
 	if (count($db_content['v_csvexport_trainingorg']) == 1 && $db_content['v_csvexport_trainingorg']['0']['coms_training_organisation_id'] == $PARTID){
 		$ATO_NAME = $db_content['v_csvexport_trainingorg']['0']['coms_training_organisation_name'];
@@ -156,18 +147,18 @@ $exvalue = "Please select exam...";
 
 //Read data for authenticated ATO
 
-$exams = clrjson(api('GET', "http://dev.bpmspace.org:4040/~amade/COMS/api/api.php/v_csvexport_trainingorg_exam?filter[]=coms_training_organisation_id,eq,".$PARTID));
+$exams = clrjson(api('GET', "http://dev.bpmspace.org:4040/~amade/COMS/COMS_client/api.php/v_csvexport_trainingorg_exam?filter[]=coms_training_organisation_id,eq,".$PARTID));
 
 
-$trainer = clrjson(api('GET', "http://dev.bpmspace.org:4040/~amade/COMS/api/api.php/v_csvexport_trainingorg_trainer?filter[]=coms_training_organisation_id,eq,".$PARTID));
+$trainer = clrjson(api('GET', "http://dev.bpmspace.org:4040/~amade/COMS/COMS_client/api.php/v_csvexport_trainingorg_trainer?filter[]=coms_training_organisation_id,eq,".$PARTID));
 
 
-$proctor = clrjson(api('GET', "http://dev.bpmspace.org:4040/~amade/COMS/api/api.php/v_csvexport_trainingorg_proctor?filter[]=coms_training_organisation_id,eq,".$PARTID));
+$proctor = clrjson(api('GET', "http://dev.bpmspace.org:4040/~amade/COMS/COMS_client/api.php/v_csvexport_trainingorg_proctor?filter[]=coms_training_organisation_id,eq,".$PARTID));
 $trid = "";
 for ($i=0; $i <count($trainer['v_csvexport_trainingorg_trainer']) ; $i++) { 
 	$trid .= ",".$trainer['v_csvexport_trainingorg_trainer'][$i]['coms_trainer_id'];
 }
-$trex = clrjson(api('GET', "http://dev.bpmspace.org:4040/~amade/COMS/api/api.php/v_csvexport_trainer_exam?filter[]=coms_trainer_id,in".$trid));
+$trex = clrjson(api('GET', "http://dev.bpmspace.org:4040/~amade/COMS/COMS_client/api.php/v_csvexport_trainer_exam?filter[]=coms_trainer_id,in".$trid));
 									//var_dump($trex);
 ?>
 
@@ -270,11 +261,7 @@ $trex = clrjson(api('GET', "http://dev.bpmspace.org:4040/~amade/COMS/api/api.php
 			<div class="md-margin-bottom-40"></div>
 			<div class="modal-body">
 				<?php
-				if ($mysqli->connect_error) {
-					echo '<div style="width: 85%; margin: 0 auto;">';
-					echo '<div class="alert alert-danger" role="alert"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Connection to DB is not working - please contact us via mail&nbsp;<a href="mailto:office@ico-cert.org?subject=Book event">office@ico-cert.org</a> </div>';
-					echo "</div>";
-				}
+				
 				if ($invalid) {
 
 					echo '<div style="width: 85%; margin: 0 auto;">';
