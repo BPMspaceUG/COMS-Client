@@ -1,10 +1,7 @@
 <?php
-
 function api($data) {
-
-	require_once('api.secret.inc.php');
-
     global $url;
+    global $headers;
 
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
