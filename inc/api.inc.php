@@ -1,14 +1,14 @@
 <?php
-require_once(__DIR__.'/api.secret.inc.php');
-
 function api($data) {
     global $url;
-    global $headers;
+    global $token;
 
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
     curl_setopt($ch, CURLOPT_URL, $url);
-
+    
+    $headers = array();
+    $headers[] = 'Cookie: token='.$token;
     $data = json_encode($data);
     if ($data) {
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
