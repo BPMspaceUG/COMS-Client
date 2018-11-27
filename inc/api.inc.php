@@ -1,4 +1,6 @@
 <?php
+require_once(__DIR__.'/api.secret.inc.php');
+
 function api($data) {
     global $url;
     global $headers;
