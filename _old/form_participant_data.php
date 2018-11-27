@@ -1,9 +1,7 @@
-
-	
-<?php
+<?php 
 
 
-			//DB api access
+//DB api access
 	function api($method, $data) {
 		$url = "URL";
 		$ch = curl_init();
@@ -12,7 +10,7 @@
 		$headers = array();
 		//JWT token for Authentication
 		/************** change following line **********************/
-		$headers[] = 'Cookie: token=' ;
+		$headers[] = 'Cookie: token=Token' ;
 		if ($data) {
 			curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
 			$headers[] = 'Content-Type: application/json';
@@ -72,7 +70,7 @@
 	function loadData(&$booked_exams, &$certificates, &$participant, $PARTID){
 
 		$booked_exams = json_decode(api('POST', json_encode(array("cmd"=>"read", "paramJS" => array("table" => "v_coms_participant__Exam_Event", "where" => "coms_participant_id = '$PARTID'")))), true);
-		$certificates = json_decode(api('POST', json_encode(array("cmd"=>"read", "paramJS" => array("table" => "v_certificate_participant", "where" => "coms_participant_id = '$PARTID' && coms_certificate_type_id != 6")))), true);
+		$certificates = json_decode(api('POST', json_encode(array("cmd"=>"read", "paramJS" => array("table" => "v_certificate_participant", "where" => "coms_participant_id = '$PARTID' && coms_certificate_type_id != 6 && (state = 'issued' || state = 'revoked')")))), true);
 		$participant = json_decode(api('POST', json_encode(array("cmd"=>"read", "paramJS" => array("table" => "coms_participant", "where" => "coms_participant_id = '$PARTID'")))), true);
 		usort($booked_exams, 'date_compare');
 		
@@ -80,11 +78,9 @@
 
 
 	$actionurl = $main_domain . $canonical ."/" . $PARTID_MD5 . "/" . $PARTID . "/";
-
 	$success = false;
 	$showerror = false;
 	$login = false;
-
 	$BACKBUTTON = False;
 	// Parameter
 	@$gender = htmlspecialchars($_POST['gender']);
@@ -96,18 +92,13 @@
 	@$birthcountry = htmlspecialchars($_POST['birthcountry']);
 	@$submit = htmlspecialchars($_POST['submit']);
 	
-
 	if (isset($_POST['language'])){
 		api('POST', json_encode(array("cmd"=>"update", "paramJS" => array("table" => "coms_participant", "row" => array("coms_participant_id" => $PARTID, "coms_participant_language_id" => $_POST['language_id'])))));
 		$language=$_POST['language'];
 	} 
-
-
-
 	if (isset($_POST['dateofbirth']) && $_POST['dateofbirth'] != "") {
 		$dateofbirth = date_format($dateofbirth, 'Y-m-d');
 	}
-
 	@$data = array(
 		htmlspecialchars($_POST['gender']),
 		//htmlspecialchars($_POST['ICO_matr_last3']),
@@ -117,7 +108,6 @@
 		htmlspecialchars($_POST['placeofbirth']),
 		htmlspecialchars($_POST['birthcountry']),
 	);
-
 	@$sql_data = array(
 		"coms_participant_gender",
 		//"coms_participant_id",
@@ -127,28 +117,22 @@
 		"coms_participant_placeofbirth",
 		"coms_participant_birthcountry",
 	);
-
-
 	$sql = array();
 	$sql_api = array("coms_participant_id" => $PARTID);
 	$sql_data_api = array();
-
 	if (isset($_GET["download"])) {	
 		$booked_exams = array();
 		$certificates = array();
 		$participant = array();
-
 							//only load data when matriculation number was correct
 							//pass data arrays to function
 		loadData($booked_exams, $certificates, $participant, $PARTID);
-
+		if ($participant[0]['state_id'] == 111 && $certificates[$_GET['download']]['state'] != 'revoked'){
 		$certpath = "../../certificates/";
 		$certificateFileName = $PARTID."_".$participant[0]["coms_participant_lastname"]."_".$participant[0]["coms_participant_firstname"]."/".$certificates[$_GET['download']]["Certificate"];
 		$pdfcontent = api('POST', json_encode(array("cmd" =>"getFile", "paramJS" => array("name" => $certificateFileName, "path" => $certpath))));
-
 		$file = $certificates[$_GET['download']]["coms_certificate_participant_id_base32"].".pdf";
 		//file_put_contents($file, $pdfcontent);
-
 		
 			header('Content-Description: File Transfer');
 			header('Content-Type: application/octet-stream');
@@ -160,13 +144,12 @@
 			ob_end_clean();
 			echo $pdfcontent;
 			ob_end_clean();
+			}
 			exit;
 		
 	}else if (!$login && isset($_GET["download"]) ){
 		echo "Got ya";
 	}
-
-
 	if (ctype_xdigit($PARTID_MD5) && strlen($PARTID_MD5) == 32 && strlen($PARTID) == 6) {
 				// MatrNr Postfix calculate
 		$PARTID_MD5_first5 = substr($PARTID_MD5, 0, 5);
@@ -174,32 +157,22 @@
 				//echo "PostFIX MatrkNr = ".$matNr_postfix."<br/>";
 		$matNr = $PARTID.substr(base_convert($PARTID_MD5_first5, 16, 10), 0, 3);
 		$matNr = str_pad(strtoupper(base_convert($matNr, 10, 32)), 8, "0", STR_PAD_LEFT);
-
 				//echo $actionurl;
 	}
 	else {
 		$invalid = true;
 	}
-
 	for ($i = 0; $i < count($sql_data); $i++) { 
 		if ($data[$i] != null) {
 			$sql_api[$sql_data[$i]] = "$data[$i]";
-
 		}
 	}
-
-
-
-
 	// Show error if something was submitted
 	if (strlen($submit) > 0) {
-
 		$showerror = true;
 	}
-
 	//"login"
 	if (isset($_POST['ICO_matr_last3'])) {
-
 		if ($_POST['ICO_matr_last3'] == $matNr_postfix){
 			$PartState = json_decode(api('POST', json_encode(array("cmd"=>"read", "paramJS" => array("table" => "coms_participant", "select" => "state_id" ,"where" => "coms_participant_id = '$PARTID'")))), true);
 			//var_dump($PartState);
@@ -212,15 +185,11 @@
 			$login = false;
 		}
 	}
-
 	//write updated personal data to DB
 	if ($gender != null || $dateofbirth != null || $placeofbirth != null || $birthcountry != null) {
-
 		$showerror = false;
 		$success = true;
-
 		$_POST['PartID'] = $PARTID;
-
 		$zwischenvar = json_encode(array("cmd"=>"update", "paramJS" => array("table" => "coms_participant", "row" => $sql_api)));
 		//var_dump($zwischenvar);
 		$errr = api('POST', $zwischenvar);
@@ -228,7 +197,6 @@
             "paramJS" => array("table" => "coms_participant", "row"=>array("coms_participant_id"=> $PARTID, "state_id" => 111)))));
 		//var_dump($errr);
 	}
-
 	?>
 
 
@@ -238,7 +206,7 @@
 				<div class="modal-header">
 					<div class="row">
 						<div class="col-md-2">
-							<a href="/"><img class="img-responsive" style="margin: 0 auto;" src="/img/180px.png" alt="Logo" title="Logo"></a>
+							<a href="/"><img class="img-responsive" style="margin: 0 auto;" src="/img/IMG180px.png" alt="Logo" title="Logo"></a>
 						</div>
 						<div class="col-md-8">
 							<div class="headline">
@@ -262,16 +230,10 @@
 
 					<div style="width: 85%; margin: 0 auto;">
 						<?php
-
-
 						if ($showerror)
 							echo '<div class="alert alert-danger" role="alert">
 						<span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Missing or false input:<ul><li> Please enter the last three digits of your matriculation number.</li><ul></div>';
-
 						if ((!isset($bookingpw) && !$login)|| $showerror) {
-
-
-
 							?>
 							<!-- Show password input first-->
 							<form class="form-horizontal" method="post" action="<?php $actionurl ?>">
@@ -298,11 +260,9 @@
 							$booked_exams = array();
 							$certificates = array();
 							$participant = array();
-
 							//only load data when matriculation number was correct
 							//pass data arrays to function
 							loadData($booked_exams, $certificates, $participant, $PARTID);
-
 							if ($participant[0]['state_id'] == 110) {
 								foreach ($booked_exams as $key => $value) {
 									if ($booked_exams[$key]['coms_participant_info'] != ""){
@@ -311,29 +271,20 @@
 									}
 								}
 							}
-
-
-
 							foreach ($certificates as $key => $value) {
-								if ($certificates[$key]["state"] == "revoked") {
+								if ($certificates[$key]["state"] == "revoked" || $participant[0]['state_id'] != 111) {
 									$certificates[$key]["download"] = "";
 								}else{
-								$certificates[$key]["download"] = "<a href='download=".$key."'>Download</a> ";
+								$certificates[$key]["download"] = "<a href='?download=".$key."'>Download</a> ";
 								//var_dump($value);
 							}
 							}
 							//var_dump($certificates);
-
-
 							
 							if ($success) {
-
 								echo $RP->replace($RP,'form_participant_data_submit_success',$language); 
-
 							}
 							if ($showerror) {
-
-
 								echo $RP->replace($RP,'form_participant_data_submit_error',$language); 
 							}
 							?>
@@ -398,7 +349,6 @@
 									</div>
 									<?php
 									break;
-
 									case 'de':
 									?>
 									<form class="form-horizontal" method="post" action="<?php $actionurl ?>">
@@ -424,11 +374,8 @@
 									# code...
 									break;
 							}
-
 									 
 											if ($participant[0]['state_id'] == 110) {
-
-
 												?>
 
 												<div class="alert alert-warning"><i class="fa fa-pencil" aria-hidden="true"></i>
@@ -558,4 +505,4 @@
 			</div>
 		</div>
 
-	</div>
+</div>
