@@ -4,5 +4,4 @@
 	require_once(__DIR__.'/inc/api.secret.inc.php');
 	require_once(__ROOT__.'/inc/api.inc.php');
 	require_once(__ROOT__.'/inc/load_ato_data.inc.php');	
-?> 
-
+?>

@@ -1,0 +1,186 @@
+#main_modal .modal-dialog {
+    max-width: 80%;
+}
+
+#main_modal .modal-content {
+    padding: 50px;
+}
+
+#main_modal a {
+    color: #000;
+    text-decoration: none;
+}
+
+#create_event_modal .modal-dialog {
+    max-width: 40%;
+}
+
+#create_event_modal .modal-content, #edit_event_modal .modal-content {
+    padding: 30px;
+}
+
+#edit_event_modal .modal-dialog {
+    max-width: 50%;
+}
+
+#add_info_modal {
+    z-index: 9999;
+}
+
+#add_info_modal .modal-dialog {
+    max-width: 30%;
+}
+
+#add_info_modal .modal-content {
+    padding: 30px;
+}
+
+.table-container {
+    border: 1px solid #111;
+    padding: 50px;
+}
+
+.coms-js-table thead {
+    background-color: #bbb;
+}
+
+.coms-js-table .odd {
+    background-color: #eee;
+}
+
+.row-border-top td {
+    border-top: 2px solid #00f;
+}
+
+.row-border-bottom td {
+    border-bottom: 2px solid #00f;
+}
+
+.row-border-none td {
+    border: none;
+}
+
+.hide-past-events-separator td {
+    border: none;
+}
+
+.nav-tabs a {
+    padding: 10px;
+}
+
+.nav-tabs {
+    border-bottom: none;
+    padding-left: 25px;
+}
+
+.nav-tabs li {
+    background-color: #bbb;
+    border: 1px solid #111;
+    margin-bottom: -1px;
+    z-index: 9;
+}
+
+.nav-tabs li.active {
+    background-color: #fff;
+    border-bottom-color: transparent;
+}
+
+.events-buttons a {
+    background-color: #fff;
+    border: 1px solid #111;
+    padding: 10px;
+}
+
+.events-buttons a.active {
+    background-color: #777;
+    color: #fff !important;
+}
+
+.add-new-exam-event {
+    color: #bbb;
+    float: left;
+    margin-right: 20px;
+    margin-top: -12px;
+}
+
+.add-new-exam-event i {
+    color: #bbb;
+}
+
+.dataTables_info {
+    display: none;
+}
+
+.dataTables_scroll {
+    border-left: 1px solid #111;
+    border-right: 1px solid #111;
+    border-top: 1px solid #111;
+}
+
+.dataTables_filter label:before {
+    content: "\f002";
+    font-family: "Font Awesome 5 Free";
+    position: absolute;
+    font-weight: 900;
+    padding-left: 15px;
+    padding-top: 3px;
+}
+
+.dataTables_filter input {
+    border-radius: 15px;
+    text-indent: 25px;
+}
+
+#login_modal .modal-dialog {
+    max-width: 30%;
+}
+
+#login_modal .modal-content {
+    padding: 30px;
+}
+
+#login_modal h2 {
+    margin-bottom: 20px;
+}
+
+#ato_login .login-submit{
+    cursor: pointer;
+    float: right;
+    margin-top: 30px;
+}
+
+#ato_logout input {
+    cursor: pointer;
+    float: right;
+}
+
+.captcha-image {
+    padding-left: 0;
+    width: auto;
+}
+
+button {
+    float: right;
+    margin: 4px;
+}
+
+@media only screen and (max-width: 992px) {
+
+    #create_event_modal .modal-dialog {
+        max-width: 80%;
+    }
+
+    #login_modal .modal-dialog {
+        max-width: 80%;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    .events-buttons a {
+        display: block;
+    }
+
+    .add-new-exam-event {
+        float: none;
+    }
+}
