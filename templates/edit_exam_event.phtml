@@ -1,7 +1,7 @@
 <div class="modal fade" id="edit_event_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="false">
     <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
         <div class="modal-content">
-            <h2>manage <?php echo $exam_event_data[0]['coms_exam_event_name'] . ' (' . $exam_event_id . ' - ' . $state . ')'; ?></h2>
+            <h3>manage <?php echo $exam_event_data[0]['coms_exam_event_name'] . ' (' . $exam_event_id . ' - ' . $state . ')'; ?></h3>
             <form method="post" action="" id="edit_event" class="needs-validation">
                 <input type="hidden" value="<?php echo $exam_event_id; ?>" name="event_exam_id">
                 <input type="hidden" value="<?php echo $state_id; ?>" name="state_id">

@@ -143,9 +143,19 @@ $(document).ready( function () {
 
     $('.add-new-exam-event a').click(function(){
         $('#create_event_modal').modal({
-            // backdrop: 'static',
+            backdrop: 'static',
             keyboard: false
         }).show();
+        $('#main_modal').css('z-index', 1039);
+    });
+
+    $('.cancel').click(function(){
+        $('#create_event_modal').modal('hide');
+    });
+
+    $('#create_event_modal').on('hidden.bs.modal', function () {
+        $('body').addClass('modal-open');
+        $('#main_modal').css('z-index', 1041);
     });
 
     $('#select_exam').change(function(){
@@ -212,16 +222,21 @@ $(document).ready( function () {
                 alert('Incorrect Exam Event');
             } else {
                 $('body').append(data);
+                $('#edit_event_modal').on('show.bs.modal', function () {
+                    $('#main_modal').css('z-index', 1039);
+                });
                 $('#edit_event_modal').modal({
-                    //backdrop: 'static',
+                    backdrop: 'static',
                     keyboard: false
                 }).show();
                 $('.cancel').click(function () {
                     $('#edit_event_modal').remove();
+                    $('#main_modal').css('z-index', 1041);
+                    $('.modal-backdrop').last().remove();
                 });
                 $('.add-info').click(function () {
                     $('#add_info_modal').modal({
-                        //backdrop: 'static',
+                        backdrop: 'static',
                         keyboard: false
                     }).show();
                 });
@@ -244,13 +259,5 @@ $(document).ready( function () {
                 });
             }
         });
-    });
-
-    $('.cancel').click(function(){
-        $('#create_event_modal').modal('hide');
-    });
-
-    $('#create_event_modal').on('hidden.bs.modal', function () {
-        $('body').addClass('modal-open');
     });
 });

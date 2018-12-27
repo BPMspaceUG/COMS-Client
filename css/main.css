@@ -11,15 +11,11 @@
     text-decoration: none;
 }
 
-#create_event_modal .modal-dialog {
-    max-width: 40%;
-}
-
 #create_event_modal .modal-content, #edit_event_modal .modal-content {
     padding: 30px;
 }
 
-#edit_event_modal .modal-dialog {
+#edit_event_modal .modal-dialog, #create_event_modal .modal-dialog {
     max-width: 50%;
 }
 
