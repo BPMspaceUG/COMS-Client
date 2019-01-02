@@ -1,8 +1,8 @@
-#main_modal .modal-dialog {
+#main_modal .modal-dialog, #show_participation_list_modal .modal-dialog {
     max-width: 80%;
 }
 
-#main_modal .modal-content {
+#main_modal .modal-content, #show_participation_list_modal .modal-content {
     padding: 50px;
 }
 
@@ -103,6 +103,47 @@
     color: #bbb;
 }
 
+#show_participation_list_modal, #show_participation_list i {
+    color: #2B78E4;
+}
+
+#show_participation_list_modal button {
+    background-color: #2B78E4;
+    color: #fff;
+}
+
+.add-participant, .anonymous-exams {
+    color: white;
+    background-color: #2B78E4;
+    border: 3px solid black;
+    border-radius: 50%;
+    height: 62px;
+    padding: 10px;
+    width: 62px;
+}
+
+.search-participant {
+    background-color: #2B78E4;
+    border: 3px solid black;
+    border-radius: 20%;
+    color: white;
+    display: inline-block;
+    height: 62px;
+    padding: 10px;
+}
+
+.participant-arrow-right {
+    padding: 0 10px;
+}
+
+.anonymous-exams {
+    margin-top: -10px;
+}
+
+.number-of-anonymous-exams {
+    width: 50px;
+}
+
 .dataTables_info {
     display: none;
 }
@@ -178,5 +219,9 @@ button {
 
     .add-new-exam-event {
         float: none;
+    }
+
+    .anonymous-exams {
+        margin-top: 0;
     }
 }

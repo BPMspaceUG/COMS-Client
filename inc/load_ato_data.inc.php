@@ -142,6 +142,7 @@ function examEventsOutput($booked_exams) {
         </div></div>
         <table id='exam_event_table' class='coms-js-table main-table'><thead>
         <th class='no-sort'></th>
+        <th class='no-sort'></th>
         <th>Event ID</th>
         <th>Event Name</th>
         <th class='sort-by-date'>Start Date</th>
@@ -154,7 +155,9 @@ function examEventsOutput($booked_exams) {
         </thead><tbody>";
         $first = true;
     foreach ($booked_exams as $booked_exam) {
-        if (($booked_exam['coms_exam_event_start_date'] < date('Y-m-d H:i:s')) && !isset($past_event) && !$first) {
+        if ($booked_exam['coms_exam_event_start_date'] < date('Y-m-d H:i:s') && $first) {
+            $past_event = true;
+        } elseif (($booked_exam['coms_exam_event_start_date'] < date('Y-m-d H:i:s')) && !isset($past_event) && !$first) {
             $output .= "<tr class='row-border-top past-events'>";
             $past_event = true;
         } else {
@@ -179,6 +182,7 @@ function examEventsOutput($booked_exams) {
         } else {
             $output .= "<td></td>";
         }
+        $output .= "<td><a href='#' class='show-participation-list' data-coms_exam_event_id='" . $booked_exam['coms_exam_event_id'] . "'><i class='fas fa-th-list'></i></a></td>";
         $output .= "<td>" . $booked_exam['coms_exam_event_id'] . "</td>";
         $output .= "<td>" . $booked_exam['coms_exam_name'] . "</td>";
         $output .= "<td>" . $booked_exam['coms_exam_event_start_date'] . "</td>";

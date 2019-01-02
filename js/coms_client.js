@@ -7,7 +7,7 @@ $(document).ready( function () {
     var main_table = $('.main-table').DataTable({
         paging: false,
         scrollY: 400,
-        order: [3,'desc'],
+        order: [4,'desc'],
         columnDefs: [{
             'targets'  : 'no-sort',
             'orderable': false
@@ -62,7 +62,7 @@ $(document).ready( function () {
         $.fn.dataTable.ext.search.push(
             function( settings, data, dataIndex ) {
                 var future = new Date();
-                var current_date = new Date(data[3]);
+                var current_date = new Date(data[4]);
                 if (current_date > future || future == null)
                 {
                     return true;
@@ -82,7 +82,7 @@ $(document).ready( function () {
         $.fn.dataTable.ext.search.push(
             function( settings, data, dataIndex ) {
                 var past = new Date();
-                var current_date = new Date(data[3]);
+                var current_date = new Date(data[4]);
                 if (current_date < past || past == null)
                 {
                     return true;
@@ -94,11 +94,11 @@ $(document).ready( function () {
     });
 
     $('#all').on( 'keyup click', function () {
-        $('.past-events').removeClass('hide-past-events-separator');
         $('.events-buttons a').removeClass('active');
         $(this).addClass('active');
         $.fn.dataTableExt.afnFiltering.length = 0;
         main_table.draw();
+        $('.past-events').removeClass('hide-past-events-separator');
     });
 
     $('.sort-by-date').click(function() {
@@ -255,6 +255,46 @@ $(document).ready( function () {
                     $('.added-info').val('');
                 });
                 $('#add_info_modal').on('hidden.bs.modal', function () {
+                    $('body').addClass('modal-open');
+                });
+            }
+        });
+    });
+
+    $('.show-participation-list').click(function(){
+        $.post("/inc/ajax_requests.php", {
+            data: 'show-participation-list',
+            exam_event_id: $(this).data('coms_exam_event_id')
+        },function(data) {
+            if (!data) {
+                alert('Incorrect Exam Event');
+            } else {
+                $('#main_modal').modal('hide');
+                $('body').append(data);
+                var participation_list_table = $('.participation-list-table').DataTable({
+                    paging: false,
+                    scrollY: 400,
+                    order: [1,'desc'],
+                    columnDefs: [{
+                        'targets'  : 'no-sort',
+                        'orderable': false
+                    }],
+                    language: {
+                        search: '',
+                        searchPlaceholder: 'Search'
+                    }
+                });
+                $('#show_participation_list_modal').modal({
+                    backdrop: 'static',
+                    keyboard: false
+                });
+                $('.cancel').click(function () {
+                    $('#show_participation_list_modal').remove();
+                    $('.modal-backdrop').last().remove();
+                    $('#main_modal').modal('show');
+                });
+                $(document).on('shown.bs.modal', '#show_participation_list_modal', function () {
+                    participation_list_table.columns.adjust();
                     $('body').addClass('modal-open');
                 });
             }
