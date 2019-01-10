@@ -260,44 +260,4 @@ $(document).ready( function () {
             }
         });
     });
-
-    $('.show-participation-list').click(function(){
-        $.post("/inc/ajax_requests.php", {
-            data: 'show-participation-list',
-            exam_event_id: $(this).data('coms_exam_event_id')
-        },function(data) {
-            if (!data) {
-                alert('Incorrect Exam Event');
-            } else {
-                $('#main_modal').modal('hide');
-                $('body').append(data);
-                var participation_list_table = $('.participation-list-table').DataTable({
-                    paging: false,
-                    scrollY: 400,
-                    order: [1,'desc'],
-                    columnDefs: [{
-                        'targets'  : 'no-sort',
-                        'orderable': false
-                    }],
-                    language: {
-                        search: '',
-                        searchPlaceholder: 'Search'
-                    }
-                });
-                $('#show_participation_list_modal').modal({
-                    backdrop: 'static',
-                    keyboard: false
-                });
-                $('.cancel').click(function () {
-                    $('#show_participation_list_modal').remove();
-                    $('.modal-backdrop').last().remove();
-                    $('#main_modal').modal('show');
-                });
-                $(document).on('shown.bs.modal', '#show_participation_list_modal', function () {
-                    participation_list_table.columns.adjust();
-                    $('body').addClass('modal-open');
-                });
-            }
-        });
-    });
 });

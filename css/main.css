@@ -1,8 +1,8 @@
-#main_modal .modal-dialog, #show_participation_list_modal .modal-dialog {
+#main_modal .modal-dialog, #show_participation_list_modal .modal-dialog, #search_participant_modal .modal-dialog {
     max-width: 80%;
 }
 
-#main_modal .modal-content, #show_participation_list_modal .modal-content {
+#main_modal .modal-content, #show_participation_list_modal .modal-content, #search_participant_modal .modal-content {
     padding: 50px;
 }
 
@@ -11,11 +11,11 @@
     text-decoration: none;
 }
 
-#create_event_modal .modal-content, #edit_event_modal .modal-content {
+#create_event_modal .modal-content, #edit_event_modal .modal-content, #add_participant_modal .modal-content, #edit_participant_modal .modal-content {
     padding: 30px;
 }
 
-#edit_event_modal .modal-dialog, #create_event_modal .modal-dialog {
+#edit_event_modal .modal-dialog, #create_event_modal .modal-dialog, #add_participant_modal .modal-dialog, #edit_participant_modal .modal-dialog {
     max-width: 50%;
 }
 
@@ -23,11 +23,11 @@
     z-index: 9999;
 }
 
-#add_info_modal .modal-dialog {
+#add_info_modal .modal-dialog, #add_anonymous_exams_modal .modal-dialog {
     max-width: 30%;
 }
 
-#add_info_modal .modal-content {
+#add_info_modal .modal-content, #add_anonymous_exams_modal .modal-content {
     padding: 30px;
 }
 
@@ -103,7 +103,7 @@
     color: #bbb;
 }
 
-#show_participation_list_modal, #show_participation_list i {
+#show_participation_list_modal, #show_participation_list i, #search_participant_modal {
     color: #2B78E4;
 }
 
@@ -112,7 +112,11 @@
     color: #fff;
 }
 
-.add-participant, .anonymous-exams {
+.participation-nav label {
+    padding: 0 5px;
+}
+
+.add-participant i, .anonymous-exams img {
     color: white;
     background-color: #2B78E4;
     border: 3px solid black;
@@ -122,7 +126,7 @@
     width: 62px;
 }
 
-.search-participant {
+.search-participant div {
     background-color: #2B78E4;
     border: 3px solid black;
     border-radius: 20%;
@@ -136,12 +140,16 @@
     padding: 0 10px;
 }
 
-.anonymous-exams {
+.anonymous-exams img {
     margin-top: -10px;
 }
 
 .number-of-anonymous-exams {
     width: 50px;
+}
+
+.radio-button {
+    margin: 6px;
 }
 
 .dataTables_info {
@@ -201,6 +209,19 @@ button {
     margin: 4px;
 }
 
+.additional-emails-button {
+    cursor: pointer;
+}
+
+.additional-emails-button div {
+    background-color: white;
+    border: 1px solid black;
+    display: none;
+    max-width: 300px;
+    padding: 10px;
+    position: absolute;
+}
+
 @media only screen and (max-width: 992px) {
 
     #create_event_modal .modal-dialog {
@@ -221,7 +242,7 @@ button {
         float: none;
     }
 
-    .anonymous-exams {
+    .anonymous-exams img {
         margin-top: 0;
     }
 }

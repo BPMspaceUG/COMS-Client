@@ -1,9 +1,11 @@
 <div class="modal fade" id="main_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
         <div class="modal-content">
-            <?php if (isset($error)) { ?>
+            <?php if (isset($error)) : ?>
                 <div class="alert alert-danger" role="alert"><?php echo $error; ?></div>
-            <?php } ?>
+            <?php elseif (isset($success)) : ?>
+                <div class="alert alert-success" role="alert"><?php echo $success; ?></div>
+            <?php endif; ?>
             <h1><?php echo $_SESSION['ato_name'] . ' (' . $PARTID . ')'; ?></h1>
             <form method="post" action="" id="ato_logout">
                 <input type="submit" value="Logout" name="ato_logout" />
@@ -99,5 +101,7 @@
     var trainers_json = <?php echo $trainers_json; ?>;
     var proctors_json = <?php echo $proctors_json; ?>;
     var trexor_json = <?php echo $trexor; ?>;
+    var all_participants = <?php echo $all_participants; ?>;
 </script>
 <script type="text/javascript" src="/js/coms_client.js"></script>
+<script type="text/javascript" src="/js/participation.js"></script>

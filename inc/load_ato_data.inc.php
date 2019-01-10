@@ -24,7 +24,7 @@ if (isset($_POST['ato_logout'])) {
 }
 if (isset($_POST['ato_login'])) {
     if (file_exists($_POST['captcha-image'])) unlink($_POST['captcha-image']);
-    if (!isset($_POST['booking-pw'])) {
+    if (!$_POST['booking-pw']) {
         $error = 'Please fill all the fields.';
     } else {
         $sentCode = htmlspecialchars($_POST["code"]);
@@ -45,7 +45,7 @@ if (isset($_POST['ato_login'])) {
     }
 }
 if (isset($_POST['create_event'])) {
-    if (!isset($_POST['select_exam']) || !isset($_POST['select_trainer']) ||  !isset($_POST['select_proctor']) || !isset($_POST['date']) ||  !isset($_POST['time']) ||  !isset($_POST['location'])) {
+    if (!isset($_POST['select_exam']) || !isset($_POST['select_trainer']) ||  !isset($_POST['select_proctor']) || !$_POST['date'] ||  !$_POST['time'] ||  !$_POST['location']) {
         $error = 'Please fill all the fields.';
     }
     if (!isset($error)) {
@@ -63,11 +63,13 @@ if (isset($_POST['create_event'])) {
             $error = $errr[0]['message'];
         } elseif (isset($errr[0]['errormsg'])) {
             $error = $errr[0]['errormsg'];
+        } else {
+            $success = "The event has been successfully created";
         }
     }
 }
 if (isset($_POST['edit_event'])) {
-    if (!isset($_POST['edit_trainer']) || !isset($_POST['edit_proctor']) || !isset($_POST['edit_location']) || !isset($_POST['time'])) {
+    if (!isset($_POST['edit_trainer']) || !isset($_POST['edit_proctor']) || !$_POST['edit_location'] || !$_POST['time']) {
         $error = 'Please fill all the fields.';
     } else {
         $exam_event_id = htmlspecialchars($_POST['event_exam_id']);
@@ -76,7 +78,7 @@ if (isset($_POST['edit_event'])) {
             $error = 'You are trying to edit an incorrect Exam Event';
         } else {
             $date = htmlspecialchars($_POST['date']) . ' ' . htmlspecialchars($_POST['time']);
-            $result = api(array(
+            $result = json_decode(api(array(
                 "cmd" => "makeTransition",
                 "paramJS" => array("table" => 'coms_exam_event',
                     "row" => array(
@@ -89,7 +91,175 @@ if (isset($_POST['edit_event'])) {
                         "state_id" => htmlspecialchars($_POST['state_id']),
                     )
                 )
-            ));
+            )), true);
+            if (!$result[0]['allow_transition']) {
+                $error = $result[0]['message'];
+            } elseif (isset($result[0]['errormsg'])) {
+                $error = $result[0]['errormsg'];
+            } else {
+                $success = "The event has been successfully edited";
+            }
+        }
+    }
+}
+if (isset($_POST['create_participant'])) {
+    if (!$_POST['firstname'] || !$_POST['lastname'] || !$_POST['email'] || !$_POST['language'] || !$_POST['gender']) {
+        $error = 'Please fill all the fields.';
+    } else {
+        $exam_event_id = htmlspecialchars($_POST['exam_event_id']);
+        $firstname = htmlspecialchars($_POST['firstname']);
+        $lastname = htmlspecialchars($_POST['lastname']);
+        $email = htmlspecialchars($_POST['email']);
+        $check_participant_email = json_decode(api(array("cmd" => "read", "paramJS" => array("table" => "v_coms_participant__id__email", "where" => "coms_participant_emailadresss = '$email'"))), true);
+        if ($check_participant_email) {
+            $error = 'Participant with this email address already exists';
+        }
+        if (!isset($error)) {
+            $place_of_birth = isset($_POST['place_of_birth']) ? htmlspecialchars($_POST['place_of_birth']) : null;
+            $country_of_birth = isset($_POST['country_of_birth']) ? htmlspecialchars($_POST['country_of_birth']) : null;
+            $errr = json_decode(api(array("cmd" => "create", "paramJS" => array("table" => "coms_participant", "row" => array(
+                "coms_participant_firstname" => $firstname,
+                "coms_participant_lastname" => $lastname,
+                "coms_participant_email" => $email,
+                "coms_participant_language_id" => htmlspecialchars($_POST['language']),
+                "coms_participant_gender" => htmlspecialchars($_POST['gender']),
+                "coms_participant_dateofbirth" => htmlspecialchars($_POST['date_of_birth']),
+                "coms_participant_placeofbirth" => $place_of_birth,
+                "coms_participant_birthcountry" => $country_of_birth
+            )))), true);
+            if (!$errr[0]['allow_transition']) {
+                $error = $errr[0]['message'];
+            } elseif (isset($errr[0]['errormsg'])) {
+                $error = $errr[0]['errormsg'];
+            } else {
+                $created_participant = json_decode(api(array("cmd" => "read", "paramJS" => array("table" => "v_coms_participant__id__email", "where" => "coms_participant_emailadresss = '$email'"))), true);
+                if ($created_participant) {
+                    $success = "The participant has been successfully created.";
+                    $errr = json_decode(api(array("cmd" => "create", "paramJS" => array("table" => "coms_participant_exam_event", "row" => array(
+                        "coms_participant_id" => $created_participant[0]['coms_participant_id'],
+                        "coms_exam_event_id" => $exam_event_id
+                    )))), true);
+                    if (!$errr[0]['allow_transition']) {
+                        $error = $errr[0]['message'];
+                    } elseif (isset($errr[0]['errormsg'])) {
+                        $error = $errr[0]['errormsg'];
+                    } else {
+                        $success = "The participant has been successfully added to the event.";
+                    }
+                } else {
+                    $error = "The Participant can't be created.";
+                }
+            }
+        }
+    }
+}
+if (isset($_POST['edit_participant'])) {
+    if (!$_POST['firstname'] || !$_POST['lastname'] || !$_POST['language'] || !$_POST['gender']) {
+        $error = 'Please fill all the fields.';
+    } else {
+        $participant_id = htmlspecialchars($_POST['participant_id']);
+        $firstname = htmlspecialchars($_POST['firstname']);
+        $lastname = htmlspecialchars($_POST['lastname']);
+        $email = htmlspecialchars($_POST['email']);
+        $place_of_birth = isset($_POST['place_of_birth']) ? htmlspecialchars($_POST['place_of_birth']) : null;
+        $country_of_birth = isset($_POST['country_of_birth']) ? htmlspecialchars($_POST['country_of_birth']) : null;
+        if ($email) {
+            $check_participant_email = json_decode(api(array("cmd" => "read", "paramJS" => array("table" => "v_coms_participant__id__email", "where" => "coms_participant_emailadresss = '$email'"))), true);
+            if ($check_participant_email) {
+                $error = 'Participant with this email address already exists';
+            } else {
+                $errr = json_decode(api(array("cmd" => "makeTransition", "paramJS" => array("table" => "coms_participant", "row" => array(
+                        "coms_participant_id" => $participant_id,
+                        "coms_participant_firstname" => $firstname,
+                        "coms_participant_lastname" => $lastname,
+                        "coms_participant_email" => $email,
+                        "coms_participant_language_id" => htmlspecialchars($_POST['language']),
+                        "coms_participant_gender" => htmlspecialchars($_POST['gender']),
+                        "coms_participant_dateofbirth" => htmlspecialchars($_POST['date_of_birth']),
+                        "coms_participant_placeofbirth" => $place_of_birth,
+                        "coms_participant_birthcountry" => $country_of_birth,
+                        "state_id" => 110
+                )))), true);
+            }
+        } else {
+            $errr = json_decode(api(array("cmd" => "makeTransition", "paramJS" => array("table" => "coms_participant", "row" => array(
+                "coms_participant_id" => $participant_id,
+                "coms_participant_firstname" => $firstname,
+                "coms_participant_lastname" => $lastname,
+                "coms_participant_language_id" => htmlspecialchars($_POST['language']),
+                "coms_participant_gender" => htmlspecialchars($_POST['gender']),
+                "coms_participant_dateofbirth" => htmlspecialchars($_POST['date_of_birth']),
+                "coms_participant_placeofbirth" => $place_of_birth,
+                "coms_participant_birthcountry" => $country_of_birth,
+                "state_id" => 110
+            )))), true);
+        }
+        if (!$errr[0]['allow_transition']) {
+            $error = $errr[0]['message'];
+        } elseif (isset($errr[0]['errormsg'])) {
+            $error = $errr[0]['errormsg'];
+        } else {
+            $success = "The participant has been successfully edited";
+        }
+    }
+}
+
+if (isset($_POST['add_existing_particiant'])) {
+    if (!isset($_POST['check_participant'])) {
+        $error = 'Please select a participant';
+    } else {
+        $participants = $_POST['check_participant'];
+        $exam_event_id = $_POST['exam_event_id'];
+        foreach ($participants as $participant) {
+            $participant_exist = json_decode(api(array("cmd" => "read", "paramJS" => array("table" => "v_coms_participant__exam_event", "where" => "coms_training_org_id = $_SESSION[user_id] && coms_exam_event_id = $exam_event_id && coms_participant_id = $participant"))), true);
+            if ($participant_exist) {
+                $error = 'This participant is already added to this exam event';
+            } else {
+                $errr = json_decode(api(array("cmd" => "create", "paramJS" => array("table" => "coms_participant_exam_event", "row" => array(
+                    "coms_participant_id" => $participant,
+                    "coms_exam_event_id" => $exam_event_id
+                )))), true);
+                if (!$errr[0]['allow_transition']) {
+                    $error = $errr[0]['message'];
+                } elseif (isset($errr[0]['errormsg'])) {
+                    $error = $errr[0]['errormsg'];
+                } else {
+                    $success = "The participants have been successfully added to the event.";
+                }
+            }
+        }
+    }
+}
+
+if (isset($_POST['add_anonymous_exams'])) {
+    $exam_event_id = htmlspecialchars($_POST['exam_event_id']);
+    $date = htmlspecialchars($_POST['anonymous_exams_date']);
+    $additional_exam_info = htmlspecialchars($_POST['anonymous_exams']);
+    $edited_exam = json_decode(api(array("cmd" => "read", "paramJS" => array("table" => "v_exam_event__exam__trainingorg__trainer", "where" => "a.coms_exam_event_id = $exam_event_id && coms_training_org_id = $_SESSION[user_id]"))), true);
+    if (!$edited_exam) {
+        $error = 'You are trying to edit an incorrect Exam Event';
+    } else {
+        if (isset($edited_exam[0]['coms_exam_event_info'])) {
+            $exam_event_info = $date . ":\r\n" . $additional_exam_info . ":\r\n" . $edited_exam[0]['coms_exam_event_info'];
+        } else {
+            $exam_event_info = $date . ":\r\n" . $additional_exam_info;
+        }
+        $result = json_decode(api(array(
+            "cmd" => "makeTransition",
+            "paramJS" => array("table" => 'coms_exam_event',
+                "row" => array(
+                    "coms_exam_event_id" => $exam_event_id,
+                    "coms_exam_event_info" => $exam_event_info,
+                    "state_id" => $edited_exam[0]['event_state_id']
+                )
+            )
+        )), true);
+        if (!$result[0]['allow_transition']) {
+            $error = $result[0]['message'];
+        } elseif (isset($result[0]['errormsg'])) {
+            $error = $result[0]['errormsg'];
+        } else {
+            $success = "Additional exam info added.";
         }
     }
 }
@@ -282,9 +452,29 @@ function date_compare($a, $b)
     return strtotime($b["coms_exam_event_start_date"]) - strtotime($a["coms_exam_event_start_date"]);
 }
 
+/**
+ * @param $array
+ * @param $key
+ * @return array
+ */
+function unique_multidim_array($array, $key) {
+    $temp_array = array();
+    $i = 0;
+    $key_array = array();
+
+    foreach($array as $val) {
+        if (!in_array($val[$key], $key_array)) {
+            $key_array[$i] = $val[$key];
+            $temp_array[$i] = $val;
+        }
+        $i++;
+    }
+    return $temp_array;
+}
+
 if (!isset($_SESSION['user_id']) || $_SESSION['user_id'] !== $PARTID) {
     generateImage($expression->n1.' + '.$expression->n2.' =', $captchaImage);
-    require_once(__ROOT__.'/templates/login.phtml');
+    require_once(__ROOT__.'/templates/login.php');
 } else {
     $exams_json = api(array("cmd" => "read", "paramJS" => array("table" => "v_csvexport_trainingorg_exam", "where" => "a.coms_training_organisation_id = $PARTID")));
     $exams = json_decode($exams_json, true);
@@ -306,5 +496,8 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_id'] !== $PARTID) {
     $tridcsv = implode(",", $trid);
     $exidcsv = implode(",", $exid);
     $trexor = api(array("cmd" => "read", "paramJS" => array("table" => "v_csvexport_trainer_exam", "where" => "coms_trainer_id in ($tridcsv) && coms_exam_id in ($exidcsv)")));
-    require_once(__ROOT__ . '/templates/main.phtml');
+    $all_participants = json_decode(api(array("cmd" => "read", "paramJS" => array("table" => "v_coms_participant__exam_event", "where" => "coms_training_org_id = $_SESSION[user_id]"))), true);
+    $all_participants = unique_multidim_array($all_participants, 'coms_participant_id');
+    $all_participants = json_encode($all_participants);
+    require_once(__ROOT__ . '/templates/main.php');
 }
