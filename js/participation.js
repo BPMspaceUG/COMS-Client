@@ -259,6 +259,36 @@ $(document).ready(function(){
                         });
                     }
                 });
+                $('.import-button').click(function() {
+                    $('#import_file_modal').modal({
+                        backdrop: 'static',
+                        keyboard: false
+                    }).show();
+                    $('.cancel-anonymous-exam').click(function(){
+                        $('#import_file_modal').modal('hide');
+                    });
+                    $('#save_import_csv').click(function() {
+                        /*var file_data = JSON.stringify($('#import_csv').prop('files')[0]);
+                        $.post("/inc/ajax_requests.php", {
+                            data: 'import_csv',
+                            file: file_data
+                        },function(data) {
+                            console.log('asd');
+                        });*/
+                        var formData = new FormData();
+                        formData.append('file', $('#import_csv').prop('files')[0]);
+                        $.ajax({
+                            url : '/inc/ajax_requests.php',
+                            type : 'POST',
+                            data : formData,
+                            processData: false,  // tell jQuery not to process the data
+                            contentType: false,  // tell jQuery not to set contentType
+                            success : function(data) {
+                                console.log(data);
+                            }
+                        });
+                    });
+                });
             }
         });
     });

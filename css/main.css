@@ -23,11 +23,11 @@
     z-index: 9999;
 }
 
-#add_info_modal .modal-dialog, #add_anonymous_exams_modal .modal-dialog {
+#add_info_modal .modal-dialog, #add_anonymous_exams_modal .modal-dialog, #import_file_modal .modal-dialog {
     max-width: 30%;
 }
 
-#add_info_modal .modal-content, #add_anonymous_exams_modal .modal-content {
+#add_info_modal .modal-content, #add_anonymous_exams_modal .modal-content, #import_file_modal .modal-content {
     padding: 30px;
 }
 

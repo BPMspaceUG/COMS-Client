@@ -8,6 +8,7 @@
                     <a href='#' class="search-participant" data-coms_exam_event_id="<?php echo $exam_event_id; ?>" data-coms_exam_event_name="<?php echo $exam_event[0]['coms_exam_event_name']; ?>" data-coms_exam_event_state_name="<?php echo $exam_event[0]['event_state_name']; ?>"><div><i class="fas fa-user fa-2x"></i><i class="participant-arrow-right fas fa-angle-right fa-2x"></i><i class="fas fa-calendar-alt fa-2x"></i></div></a>
                     <a href='#' class="anonymous-exams" data-coms_exam_event_id="<?php echo $exam_event_id; ?>"><img src="/images/anonymous-face-mask.svg"></a>
                     <input type="number" min="3" value="3" id="number_of_anonymous_exams" class="number-of-anonymous-exams"><label for="number_of_anonymous_exams">Dummy Exams</label>
+<!--                    <button type="button" class="btn import-button">Import</button>-->
                 <?php endif; ?>
             </div>
             <table id='show_participation_list' class='coms-js-table participation-list-table'>
@@ -166,6 +167,25 @@
                     </div>
                     <div class="col-lg-6">
                         <button class="btn btn-primary" type="submit" name="add_anonymous_exams">Save</button>
+                        <button type="button" class="btn cancel-anonymous-exam">Cancel</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="import_file_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+        <div class="modal-content">
+            <h3>import CSV</h3>
+            <form method="post" action="" id="import_csv_form">
+                <input type="file" name="import_csv" id="import_csv" />
+                <div class="form-group row">
+                    <div class="col-lg-6">
+                    </div>
+                    <div class="col-lg-6">
+                        <button class="btn btn-primary" type="button" id="save_import_csv" name="save_import_csv">Save</button>
                         <button type="button" class="btn cancel-anonymous-exam">Cancel</button>
                     </div>
                 </div>
