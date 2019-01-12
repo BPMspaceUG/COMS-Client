@@ -6,9 +6,9 @@
             <?php elseif (isset($success)) : ?>
                 <div class="alert alert-success" role="alert"><?php echo $success; ?></div>
             <?php endif; ?>
-            <h1><?php echo $_SESSION['ato_name'] . ' (' . $PARTID . ')'; ?></h1>
+            <h1><?php echo $_SESSION['ato_name'] . ' (' . $PARTID . ')'; ?> LALA</h1>
             <form method="post" action="" id="ato_logout">
-                <input type="submit" value="Logout!" name="ato_logout" />
+                <input type="submit" value="Logout" name="ato_logout" />
             </form>
             <ul class="nav nav-tabs">
                 <li id="exam_event" class="table-switch-button active"><a href="#">Exam Event</a></li>
