@@ -1,4 +1,5 @@
 <?php
+echo "test";
 	define('__ROOT__', dirname(__FILE__)); 
 
 	require_once(__DIR__.'/inc/api.secret.inc.php');
