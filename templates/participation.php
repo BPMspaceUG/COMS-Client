@@ -8,7 +8,7 @@
                     <a href='#' class="search-participant" data-coms_exam_event_id="<?php echo $exam_event_id; ?>" data-coms_exam_event_name="<?php echo $exam_event[0]['coms_exam_event_name']; ?>" data-coms_exam_event_state_name="<?php echo $exam_event[0]['event_state_name']; ?>"><div><i class="fas fa-user fa-2x"></i><i class="participant-arrow-right fas fa-angle-right fa-2x"></i><i class="fas fa-calendar-alt fa-2x"></i></div></a>
                     <a href='#' class="anonymous-exams" data-coms_exam_event_id="<?php echo $exam_event_id; ?>"><img src="/images/anonymous-face-mask.svg"></a>
                     <input type="number" min="3" value="3" id="number_of_anonymous_exams" class="number-of-anonymous-exams"><label for="number_of_anonymous_exams">Dummy Exams</label>
-<!--                    <button type="button" class="btn import-button">Import</button>-->
+                    <button type="button" class="btn import-button" data-coms_exam_event_id="<?php echo $exam_event_id; ?>">Import</button>
                 <?php endif; ?>
             </div>
             <table id='show_participation_list' class='coms-js-table participation-list-table'>
@@ -107,22 +107,22 @@
                     <input type="text" id="email" name="email" class="form-control col-lg-8" required />
                 </div>
                 <div class="form-group row">
-                    <label for="language" class="col-lg-4 col-sm-6">Language *</label>
+                    <label for="language" class="col-lg-4 col-sm-6">Language</label>
                     <?php foreach ($languages as $language) {
                         if ($language['coms_language_id'] == 5 || $language['coms_language_id'] == 6) {
-                            echo "<input type='radio' name='language' class='radio-button' required value='" . $language['coms_language_id'] . "'/><span class='text-lowercase'>" . $language['language_short'] . "</span>";
+                            echo "<input type='radio' name='language' class='radio-button' value='" . $language['coms_language_id'] . "'/><span class='text-lowercase'>" . $language['language_short'] . "</span>";
                         }
                     } ?>
                 </div>
                 <div class="form-group row">
-                    <label for="language" class="col-lg-4 col-sm-6">Gender *</label>
+                    <label for="language" class="col-lg-4 col-sm-6">Gender</label>
                     <?php foreach ($genders as $gender) {
-                        echo "<input type='radio' name='gender' class='radio-button' required value='" . $gender . "'/><span class='text-lowercase'>" . $gender . "</span>";
+                        echo "<input type='radio' name='gender' class='radio-button' value='" . $gender . "'/><span class='text-lowercase'>" . $gender . "</span>";
                     } ?>
                 </div>
                 <div class="form-group row">
-                    <label for="date_of_birth" class="col-lg-4 col-sm-6">Date of Birth *</label>
-                    <input type="date" id="date_of_birth" name="date_of_birth" class="form-control col-lg-8" required />
+                    <label for="date_of_birth" class="col-lg-4 col-sm-6">Date of Birth</label>
+                    <input type="date" id="date_of_birth" name="date_of_birth" class="form-control col-lg-8" />
                 </div>
                 <div class="form-group row">
                     <label for="place_of_birth" class="col-lg-4 col-sm-6">Place of Birth</label>
@@ -179,14 +179,14 @@
     <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
         <div class="modal-content">
             <h3>import CSV</h3>
-            <form method="post" action="" id="import_csv_form">
-                <input type="file" name="import_csv" id="import_csv" />
+            <form method="post" action="" id="import_csv_form" class="needs-validation">
+                <input type="file" name="import_csv" id="import_csv" required />
                 <div class="form-group row">
                     <div class="col-lg-6">
                     </div>
                     <div class="col-lg-6">
-                        <button class="btn btn-primary" type="button" id="save_import_csv" name="save_import_csv">Save</button>
-                        <button type="button" class="btn cancel-anonymous-exam">Cancel</button>
+                        <button class="btn btn-primary" type="button" id="save_import_csv" name="save_import_csv">OK</button>
+                        <button type="button" class="btn cancel-import">Cancel</button>
                     </div>
                 </div>
             </form>

@@ -1,7 +1,7 @@
 <?php
 session_start();
-require_once(__DIR__ . '/api.secret.inc.php');
-require_once(__DIR__ . '/api.inc.php');
+require_once($_SERVER['DOCUMENT_ROOT'] . '/inc/api.secret.inc.php');
+require_once($_SERVER['DOCUMENT_ROOT'] . '/inc/api.inc.php');
 
 /**
  * @param $array
@@ -174,9 +174,153 @@ if (isset($_POST['data'])) {
         }
         echo $result;
     }
+    if ($_POST['data'] == 'create-participant-from-csv') {
+        $participants = json_decode($_POST['items']);
+        $exam_event_id = htmlspecialchars($_POST['exam_event_id']);
+        foreach ($participants as $item) {
+            $firstname = htmlspecialchars($item[2]);
+            $lastname = htmlspecialchars($item[1]);
+            $email = htmlspecialchars($item[4]);
+            $check_participant_email = json_decode(api(array("cmd" => "read", "paramJS" => array("table" => "v_coms_participant__id__email", "where" => "coms_participant_emailadresss = '$email'"))), true);
+            if ($check_participant_email) {
+                $error = 'Participant with this email address already exists';
+            }
+            if (!isset($error)) {
+                $place_of_birth = $item[9] ? htmlspecialchars($item[9]) : null;
+                $country_of_birth = $item[10] ? htmlspecialchars($item[10]) : null;
+                $gender = $item[3] ? htmlspecialchars($item[3]) : null;
+                $date_of_birth = $item[8] ? htmlspecialchars($item[8]) : null;
+                $errr = json_decode(api(array("cmd" => "create", "paramJS" => array("table" => "coms_participant", "row" => array(
+                    "coms_participant_firstname" => $firstname,
+                    "coms_participant_lastname" => $lastname,
+                    "coms_participant_email" => $email,
+                    "coms_participant_language_id" => 6,
+                    "coms_participant_gender" => $gender,
+                    "coms_participant_dateofbirth" => $date_of_birth,
+                    "coms_participant_placeofbirth" => $place_of_birth,
+                    "coms_participant_birthcountry" => $country_of_birth
+                )))), true);
+                if (!$errr[0]['allow_transition']) {
+                    $error = $errr[0]['message'];
+                } elseif (isset($errr[0]['errormsg'])) {
+                    $error = $errr[0]['errormsg'];
+                } else {
+                    $created_participant = json_decode(api(array("cmd" => "read", "paramJS" => array("table" => "v_coms_participant__id__email", "where" => "coms_participant_emailadresss = '$email'"))), true);
+                    if ($created_participant) {
+                        $success = "The participant has been successfully created.";
+                        $errr = json_decode(api(array("cmd" => "create", "paramJS" => array("table" => "coms_participant_exam_event", "row" => array(
+                            "coms_participant_id" => $created_participant[0]['coms_participant_id'],
+                            "coms_exam_event_id" => $exam_event_id
+                        )))), true);
+                        if (!$errr[0]['allow_transition']) {
+                            $error = $errr[0]['message'];
+                        } elseif (isset($errr[0]['errormsg'])) {
+                            $error = $errr[0]['errormsg'];
+                        } else {
+                            $success = "The participant has been successfully added to the event.";
+                        }
+                    } else {
+                        $error = "The Participant can't be created.";
+                    }
+                }
+            }
+        }
+        if (isset($success)) {
+            echo 'success';
+        } elseif (isset($error)) {
+            echo $error;
+        }
+    }
+    if ($_POST['data'] == 'book-participant-from-csv') {
+        $participants = json_decode($_POST['items'], true);
+        $exam_event_id = htmlspecialchars($_POST['exam_event_id']);
+        foreach ($participants as $participant) {
+            $participant_exist = json_decode(api(array("cmd" => "read", "paramJS" => array("table" => "v_coms_participant__exam_event", "where" => "coms_training_org_id = $_SESSION[user_id] && coms_exam_event_id = $exam_event_id && coms_participant_id = $participant[99]"))), true);
+            if ($participant_exist) {
+                $error = 'This participant is already added to this exam event';
+            } else {
+                $errr = json_decode(api(array("cmd" => "create", "paramJS" => array("table" => "coms_participant_exam_event", "row" => array(
+                    "coms_participant_id" => $participant[99],
+                    "coms_exam_event_id" => $exam_event_id
+                )))), true);
+                if (!$errr[0]['allow_transition']) {
+                    $error = $errr[0]['message'];
+                } elseif (isset($errr[0]['errormsg'])) {
+                    $error = $errr[0]['errormsg'];
+                } else {
+                    $success = "The participants have been successfully added to the event.";
+                }
+            }
+        }
+        if (isset($success)) {
+            echo 'success';
+        } elseif (isset($error)) {
+            echo $error;
+        }
+    }
 } else {
     if (isset($_FILES)) {
-        $file_content = file_get_contents($_FILES['input-field-name']['tmp_name']);
-        var_dump($file_content);exit();
+        $handle = fopen($_FILES['file']['tmp_name'], 'r');
+        $error_records = array();
+        $create_records = array();
+        $book_records = array();
+        while (($data = fgetcsv($handle)) !== FALSE) {
+            if ((int)$data[0]) {
+                /*echo $lastname;
+                echo preg_replace("/\W\s/u", '', $lastname) . "<br />";
+                exit();*/
+                $lastname = isset($data[1]) ? $data[1] : false;
+                $firstname = isset($data[2]) ? $data[2] : false;
+                $email = isset($data[4]) ? $data[4] : false;
+                if (!$lastname && !$firstname && !$email) continue;
+                $ico = isset($data[7]) ? $data[7] : false;
+                if ($ico) {
+                    $participant = json_decode(api(array("cmd" => "read", "paramJS" => array("table" => "v_coms_participant__id__email", "where" => "coms_participant_emailadresss = '$email'"))), true);
+                    if ($participant) {
+                        if ($firstname == $participant[0]['coms_participant_firstname'] && $lastname == $participant[0]['coms_participant_lastname']) {
+                            $data[99] = $participant[0]['coms_participant_id'];
+                            array_push($book_records, $data);
+                        } else {
+                            $firstname = $firstname ? $firstname . ", " : '';
+                            $lastname = $lastname ? $lastname . ", " : '';
+                            $error_record = $firstname . $lastname . $email . ", Ico Id exists but firstname or lastname don't match.";
+                            array_push($error_records, $error_record);
+                        }
+                    } else {
+                        $firstname = $firstname ? $firstname . ", " : '';
+                        $lastname = $lastname ? $lastname . ", " : '';
+                        $error_record = $firstname . $lastname . $email . ", Ico Id exists but firstname or lastname don't match.";
+                        array_push($error_records, $error_record);
+                    }
+                } else {
+                    if (!$lastname || !$firstname || !$email) {
+                        $firstname_text = $firstname ? $firstname : "No Firstname";
+                        $lastname_text = $lastname ? $lastname : "No Lastname";
+                        $email_text = $email ? $email : "No Email";
+                        $error_record = $firstname_text . ", " . $lastname_text . ", " . $email_text;
+                        array_push($error_records, $error_record);
+                    } else {
+                        $participant = json_decode(api(array("cmd" => "read", "paramJS" => array("table" => "v_coms_participant__id__email", "where" => "coms_participant_emailadresss = '$email'"))), true);
+                        if ($participant) {
+                            if ($firstname == $participant[0]['coms_participant_firstname'] && $lastname == $participant[0]['coms_participant_lastname']) {
+                                $data[99] = $participant[0]['coms_participant_id'];
+                                array_push($book_records, $data);
+                            } else {
+                                $error_record = $firstname . ", " . $lastname . ", " . $email . ", Email exists but Firstname and lastname are different.";
+                                array_push($error_records, $error_record);
+                            }
+                        } else {
+                            array_push($create_records, $data);
+                        }
+                    }
+                }
+            }
+        }
+        fclose($handle);
+    }
+    if (!$error_records && !$book_records && !$create_records) {
+        echo false;
+    } else {
+        require_once($_SERVER['DOCUMENT_ROOT'] . '/templates/import_participants.php');
     }
 }

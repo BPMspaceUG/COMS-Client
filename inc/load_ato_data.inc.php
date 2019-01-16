@@ -4,11 +4,11 @@
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 <script src="//stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
-<link rel="stylesheet" type="text/css" href="<?php echo __DIR__; ?>/css/main.css"/>
+<link rel="stylesheet" type="text/css" href="/css/main.css"/>
 
 <?php
 session_start();
-require_once(__DIR__.'/captcha/captcha.php');
+require_once($_SERVER['DOCUMENT_ROOT'] . '/inc/captcha/captcha.php');
 $url_array = explode('/', $_SERVER['REQUEST_URI']);
 if (count($url_array) < 2) {
     header('Location: //' . $_SERVER['SERVER_NAME'] . '/404.php');
@@ -103,13 +103,16 @@ if (isset($_POST['edit_event'])) {
     }
 }
 if (isset($_POST['create_participant'])) {
-    if (!$_POST['firstname'] || !$_POST['lastname'] || !$_POST['email'] || !$_POST['language'] || !$_POST['gender']) {
+    if (!$_POST['firstname'] || !$_POST['lastname'] || !$_POST['email']) {
         $error = 'Please fill all the fields.';
     } else {
         $exam_event_id = htmlspecialchars($_POST['exam_event_id']);
         $firstname = htmlspecialchars($_POST['firstname']);
         $lastname = htmlspecialchars($_POST['lastname']);
         $email = htmlspecialchars($_POST['email']);
+        $language = isset($_POST['language']) ? htmlspecialchars($_POST['language']) : 6;
+        $gender = isset($_POST['gender']) ? htmlspecialchars($_POST['gender']) : null;
+        $date_of_birth = $_POST['date_of_birth'] ? htmlspecialchars($_POST['date_of_birth']) : null;
         $check_participant_email = json_decode(api(array("cmd" => "read", "paramJS" => array("table" => "v_coms_participant__id__email", "where" => "coms_participant_emailadresss = '$email'"))), true);
         if ($check_participant_email) {
             $error = 'Participant with this email address already exists';
@@ -121,9 +124,9 @@ if (isset($_POST['create_participant'])) {
                 "coms_participant_firstname" => $firstname,
                 "coms_participant_lastname" => $lastname,
                 "coms_participant_email" => $email,
-                "coms_participant_language_id" => htmlspecialchars($_POST['language']),
-                "coms_participant_gender" => htmlspecialchars($_POST['gender']),
-                "coms_participant_dateofbirth" => htmlspecialchars($_POST['date_of_birth']),
+                "coms_participant_language_id" => $language,
+                "coms_participant_gender" => $gender,
+                "coms_participant_dateofbirth" => $date_of_birth,
                 "coms_participant_placeofbirth" => $place_of_birth,
                 "coms_participant_birthcountry" => $country_of_birth
             )))), true);
@@ -154,13 +157,16 @@ if (isset($_POST['create_participant'])) {
     }
 }
 if (isset($_POST['edit_participant'])) {
-    if (!$_POST['firstname'] || !$_POST['lastname'] || !$_POST['language'] || !$_POST['gender']) {
+    if (!$_POST['firstname'] || !$_POST['lastname']) {
         $error = 'Please fill all the fields.';
     } else {
         $participant_id = htmlspecialchars($_POST['participant_id']);
         $firstname = htmlspecialchars($_POST['firstname']);
         $lastname = htmlspecialchars($_POST['lastname']);
         $email = htmlspecialchars($_POST['email']);
+        $language = isset($_POST['language']) ? htmlspecialchars($_POST['language']) : 6;
+        $gender = isset($_POST['gender']) ? htmlspecialchars($_POST['gender']) : null;
+        $date_of_birth = $_POST['date_of_birth'] ? htmlspecialchars($_POST['date_of_birth']) : null;
         $place_of_birth = isset($_POST['place_of_birth']) ? htmlspecialchars($_POST['place_of_birth']) : null;
         $country_of_birth = isset($_POST['country_of_birth']) ? htmlspecialchars($_POST['country_of_birth']) : null;
         if ($email) {
@@ -173,9 +179,9 @@ if (isset($_POST['edit_participant'])) {
                         "coms_participant_firstname" => $firstname,
                         "coms_participant_lastname" => $lastname,
                         "coms_participant_email" => $email,
-                        "coms_participant_language_id" => htmlspecialchars($_POST['language']),
-                        "coms_participant_gender" => htmlspecialchars($_POST['gender']),
-                        "coms_participant_dateofbirth" => htmlspecialchars($_POST['date_of_birth']),
+                        "coms_participant_language_id" => $language,
+                        "coms_participant_gender" => $gender,
+                        "coms_participant_dateofbirth" => $date_of_birth,
                         "coms_participant_placeofbirth" => $place_of_birth,
                         "coms_participant_birthcountry" => $country_of_birth,
                         "state_id" => 110
@@ -186,9 +192,9 @@ if (isset($_POST['edit_participant'])) {
                 "coms_participant_id" => $participant_id,
                 "coms_participant_firstname" => $firstname,
                 "coms_participant_lastname" => $lastname,
-                "coms_participant_language_id" => htmlspecialchars($_POST['language']),
-                "coms_participant_gender" => htmlspecialchars($_POST['gender']),
-                "coms_participant_dateofbirth" => htmlspecialchars($_POST['date_of_birth']),
+                "coms_participant_language_id" => $language,
+                "coms_participant_gender" => $gender,
+                "coms_participant_dateofbirth" => $date_of_birth,
                 "coms_participant_placeofbirth" => $place_of_birth,
                 "coms_participant_birthcountry" => $country_of_birth,
                 "state_id" => 110
@@ -474,7 +480,7 @@ function unique_multidim_array($array, $key) {
 
 if (!isset($_SESSION['user_id']) || $_SESSION['user_id'] !== $PARTID) {
     generateImage($expression->n1.' + '.$expression->n2.' =', $captchaImage);
-    require_once(__ROOT__.'/templates/login.php');
+    require_once($_SERVER['DOCUMENT_ROOT'].'/templates/login.php');
 } else {
     $exams_json = api(array("cmd" => "read", "paramJS" => array("table" => "v_csvexport_trainingorg_exam", "where" => "a.coms_training_organisation_id = $PARTID")));
     $exams = json_decode($exams_json, true);
@@ -499,5 +505,5 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_id'] !== $PARTID) {
     $all_participants = json_decode(api(array("cmd" => "read", "paramJS" => array("table" => "v_coms_participant__exam_event", "where" => "coms_training_org_id = $_SESSION[user_id]"))), true);
     $all_participants = unique_multidim_array($all_participants, 'coms_participant_id');
     $all_participants = json_encode($all_participants);
-    require_once(__ROOT__ . '/templates/main.php');
+    require_once($_SERVER['DOCUMENT_ROOT'] . '/templates/main.php');
 }

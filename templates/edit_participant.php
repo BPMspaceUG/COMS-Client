@@ -16,30 +16,30 @@
                     <input type="text" id="email" name="email" class="form-control col-lg-8" />
                 </div>
                 <div class="form-group row">
-                    <label for="language" class="col-lg-4 col-sm-6">Language *</label>
+                    <label for="language" class="col-lg-4 col-sm-6">Language</label>
                     <?php foreach ($languages as $language_list) {
                         if ($language_list['coms_language_id'] == 5 || $language_list['coms_language_id'] == 6) {
                             if ($language_list['coms_language_id'] == $language) {
-                                echo "<input type='radio' name='language' class='radio-button' required value='" . $language_list['coms_language_id'] . "' checked/><span class='text-lowercase'>" . $language_list['language_short'] . "</span>";
+                                echo "<input type='radio' name='language' class='radio-button' value='" . $language_list['coms_language_id'] . "' checked/><span class='text-lowercase'>" . $language_list['language_short'] . "</span>";
                             } else {
-                                echo "<input type='radio' name='language' class='radio-button' required value='" . $language_list['coms_language_id'] . "'/><span class='text-lowercase'>" . $language_list['language_short'] . "</span>";
+                                echo "<input type='radio' name='language' class='radio-button' value='" . $language_list['coms_language_id'] . "'/><span class='text-lowercase'>" . $language_list['language_short'] . "</span>";
                             }
                         }
                     } ?>
                 </div>
                 <div class="form-group row">
-                    <label for="gender" class="col-lg-4 col-sm-6">Gender *</label>
+                    <label for="gender" class="col-lg-4 col-sm-6">Gender</label>
                     <?php foreach ($genders as $gender_list) {
                         if ($gender_list == $gender) {
-                                echo "<input type='radio' name='gender' class='radio-button' required value='" . $gender_list . "' checked/><span class='text-lowercase'>" . $gender_list . "</span>";
+                                echo "<input type='radio' name='gender' class='radio-button' value='" . $gender_list . "' checked/><span class='text-lowercase'>" . $gender_list . "</span>";
                             } else {
-                                echo "<input type='radio' name='gender' class='radio-button' required value='" . $gender_list . "'/><span class='text-lowercase'>" . $gender_list . "</span>";
+                                echo "<input type='radio' name='gender' class='radio-button' value='" . $gender_list . "'/><span class='text-lowercase'>" . $gender_list . "</span>";
                             }
                     } ?>
                 </div>
                 <div class="form-group row">
-                    <label for="date_of_birth" class="col-lg-4 col-sm-6">Date of Birth *</label>
-                    <input type="date" id="date_of_birth" name="date_of_birth" class="form-control col-lg-8" value="<?php echo $date_of_birth; ?>" required />
+                    <label for="date_of_birth" class="col-lg-4 col-sm-6">Date of Birth</label>
+                    <input type="date" id="date_of_birth" name="date_of_birth" class="form-control col-lg-8" value="<?php echo $date_of_birth; ?>" />
                 </div>
                 <div class="form-group row">
                     <label for="place_of_birth" class="col-lg-4 col-sm-6">Place of Birth</label>

@@ -260,31 +260,110 @@ $(document).ready(function(){
                     }
                 });
                 $('.import-button').click(function() {
+                    var exam_event_id = $(this).data('coms_exam_event_id');
+                    $('#import_file_modal .alert-danger').remove();
                     $('#import_file_modal').modal({
                         backdrop: 'static',
                         keyboard: false
                     }).show();
-                    $('.cancel-anonymous-exam').click(function(){
+                    $('#show_participation_list_modal').css('z-index', 1039);
+                    $('.cancel-import').click(function(){
                         $('#import_file_modal').modal('hide');
+                        $('#show_participation_list_modal').css('z-index', 1041);
                     });
-                    $('#save_import_csv').click(function() {
-                        /*var file_data = JSON.stringify($('#import_csv').prop('files')[0]);
-                        $.post("/inc/ajax_requests.php", {
-                            data: 'import_csv',
-                            file: file_data
-                        },function(data) {
-                            console.log('asd');
-                        });*/
+                    $('#import_file_modal').on('hidden.bs.modal', function () {
+                        $('body').addClass('modal-open');
+                    });
+                    $('#save_import_csv').click(function(e) {
+                        e.stopImmediatePropagation();
+                        if(!$('#import_csv').val()) {
+                            return;
+                        }
                         var formData = new FormData();
                         formData.append('file', $('#import_csv').prop('files')[0]);
                         $.ajax({
                             url : '/inc/ajax_requests.php',
                             type : 'POST',
                             data : formData,
-                            processData: false,  // tell jQuery not to process the data
-                            contentType: false,  // tell jQuery not to set contentType
+                            processData: false,
+                            contentType: false,
                             success : function(data) {
-                                console.log(data);
+                                if (!data) {
+                                    $('#import_file_modal h3').before("<div class='alert alert-danger' role='alert'>Incorrect file.</div>");
+                                } else {
+                                    $('body').append(data);
+                                    $('#import_participants_modal').modal({
+                                        backdrop: 'static',
+                                        keyboard: false
+                                    }).show();
+                                    $('#show_participation_list_modal').css('z-index', 1039);
+                                    $('.cancel-import-window').click(function () {
+                                        $('#import_participants_modal').remove();
+                                        $('.modal-backdrop').last().remove();
+                                        $('#import_file_modal').modal('hide');
+                                        $('#show_participation_list_modal').css('z-index', 1041);
+                                    });
+                                    $('.deselect-all').change(function () {
+                                        if ($(this).is(':checked')) {
+                                            $(this).parent().next('form').find('input').prop("checked", false).trigger('change');
+                                        }
+                                    });
+                                    $('.select-all').change(function () {
+                                        if ($(this).is(':checked')) {
+                                            $(this).parent().next('form').find('input').prop("checked", true).trigger('change');
+                                        }
+                                    });
+                                    $('.create-participant-from-import-button').click(function() {
+                                        var json_items = Array();
+                                        $.each($('.create-check-participant:checked'), function(index, value){
+                                            json_items.push(jQuery.parseJSON($(value).val()));
+                                        });
+                                        $.post("/inc/ajax_requests.php", {
+                                            data: 'create-participant-from-csv',
+                                            items: JSON.stringify(json_items),
+                                            exam_event_id: exam_event_id
+                                        },function(data) {
+                                            if (data) {
+                                                if (data == 'success') {
+                                                    $.each($('.create-check-participant:checked'), function (index, value) {
+                                                        $(value).parent('div').remove();
+                                                    });
+                                                    $('#import_participants_modal h3').before("<div class='alert alert-success' role='alert'>The selected participants have been successfully created and added to the exam event.</div>");
+                                                    if ($('#create_participant_form_csv').find('.create-check-participant').length < 1) {
+                                                        $('.create-records-container').remove();
+                                                    }
+                                                } else {
+                                                    $('#import_participants_modal h3').before("<div class='alert alert-danger' role='alert'>" + data + "</div>");
+                                                }
+                                            }
+                                        });
+                                    });
+                                    $('.book-participant-from-import-button').click(function() {
+                                        var json_items = Array();
+                                        $.each($('.book-check-participant:checked'), function(index, value){
+                                            json_items.push(jQuery.parseJSON($(value).val()));
+                                        });
+                                        $.post("/inc/ajax_requests.php", {
+                                            data: 'book-participant-from-csv',
+                                            items: JSON.stringify(json_items),
+                                            exam_event_id: exam_event_id
+                                        },function(data) {
+                                            if (data) {
+                                                if (data == 'success') {
+                                                    $.each($('.book-check-participant:checked'), function (index, value) {
+                                                        $(value).parent('div').remove();
+                                                    });
+                                                    $('#import_participants_modal h3').before("<div class='alert alert-success' role='alert'>The selected participants have been successfully added to the exam event.</div>");
+                                                    if ($('#book_participant_form_csv').find('.book-check-participant').length < 1) {
+                                                        $('.book-records-container').remove();
+                                                    }
+                                                } else {
+                                                    $('#import_participants_modal h3').before("<div class='alert alert-danger' role='alert'>" + data + "</div>");
+                                                }
+                                            }
+                                        });
+                                    });
+                                }
                             }
                         });
                     });

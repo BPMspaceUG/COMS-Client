@@ -11,11 +11,11 @@
     text-decoration: none;
 }
 
-#create_event_modal .modal-content, #edit_event_modal .modal-content, #add_participant_modal .modal-content, #edit_participant_modal .modal-content {
+#create_event_modal .modal-content, #edit_event_modal .modal-content, #add_participant_modal .modal-content, #edit_participant_modal .modal-content, #import_participants_modal .modal-content {
     padding: 30px;
 }
 
-#edit_event_modal .modal-dialog, #create_event_modal .modal-dialog, #add_participant_modal .modal-dialog, #edit_participant_modal .modal-dialog {
+#edit_event_modal .modal-dialog, #create_event_modal .modal-dialog, #add_participant_modal .modal-dialog, #edit_participant_modal .modal-dialog, #import_participants_modal .modal-dialog {
     max-width: 50%;
 }
 
@@ -219,6 +219,24 @@ button {
     display: none;
     max-width: 300px;
     padding: 10px;
+    position: absolute;
+}
+
+.import-records-container {
+    border: 1px solid #000;
+    margin: 20px 0;
+    padding: 20px;
+}
+
+.import-records-container form {
+    clear: both;
+}
+
+.import-records-container-title {
+    background-color: white;
+    border: 1px solid black;
+    margin-top: -35px;
+    padding: 0 5px;
     position: absolute;
 }
 
