@@ -1,6 +1,6 @@
 $(document).ready(function(){
     $('.show-participation-list').click(function(){
-        $.post("/inc/ajax_requests.php", {
+        $.post("/inc/ajax_requests.inc.php", {
             data: 'show-participation-list',
             exam_event_id: $(this).data('coms_exam_event_id')
         },function(data) {
@@ -40,7 +40,7 @@ $(document).ready(function(){
                     if (!confirm("Do you really want to cancel this participant?")){
                         return false;
                     }
-                    $.post("/inc/ajax_requests.php", {
+                    $.post("/inc/ajax_requests.inc.php", {
                         data: 'cancel-participant-state',
                         coms_participant_exam_event_id: $(this).data('coms_participant_exam_event_id')
                     },function(data) {
@@ -85,7 +85,7 @@ $(document).ready(function(){
                     $('#create_participant').trigger("reset");
                 });
                 $('.create-participant').click(function(){
-                    $.post("/inc/ajax_requests.php", {
+                    $.post("/inc/ajax_requests.inc.php", {
                         data: 'check-participant-name',
                         firstname: $('#firstname').val(),
                         lastname: $('#lastname').val()
@@ -100,7 +100,7 @@ $(document).ready(function(){
 
                 $('.edit-participant').click(function(){
                     var participant_id = $(this).data('coms_participant_id');
-                    $.post("/inc/ajax_requests.php", {
+                    $.post("/inc/ajax_requests.inc.php", {
                         data: 'edit-participant',
                         participant_id: participant_id
                     },function(data) {
@@ -121,7 +121,7 @@ $(document).ready(function(){
                                 $('.modal-backdrop').last().remove();
                             });
                             $('.edit-participant-button').click(function(){
-                                $.post("/inc/ajax_requests.php", {
+                                $.post("/inc/ajax_requests.inc.php", {
                                     data: 'check-participant-name',
                                     participant_id: participant_id,
                                     firstname: $('#edit_participant #firstname').val(),
@@ -140,7 +140,7 @@ $(document).ready(function(){
                 });
 
                 $('.search-participant').click(function(){
-                    /*$.post("/inc/ajax_requests.php", {
+                    /*$.post("/inc/ajax_requests.inc.php", {
                         data: 'search-participant',
                         exam_event_id: $(this).data('coms_exam_event_id'),
                         all_participants: all_participants
@@ -152,7 +152,7 @@ $(document).ready(function(){
                     var exam_event_id = $(this).data('coms_exam_event_id');
                     var exam_event_name = $(this).data('coms_exam_event_name');
                     var exam_event_state_name = $(this).data('coms_exam_event_state_name');
-                    $.post("/inc/ajax_requests.php", {
+                    $.post("/inc/ajax_requests.inc.php", {
                         data: 'search-participant',
                         exam_event_id: exam_event_id
                     },function(data) {
@@ -282,7 +282,7 @@ $(document).ready(function(){
                         var formData = new FormData();
                         formData.append('file', $('#import_csv').prop('files')[0]);
                         $.ajax({
-                            url : '/inc/ajax_requests.php',
+                            url : '/inc/ajax_requests.inc.php',
                             type : 'POST',
                             data : formData,
                             processData: false,
@@ -318,7 +318,7 @@ $(document).ready(function(){
                                         $.each($('.create-check-participant:checked'), function(index, value){
                                             json_items.push(jQuery.parseJSON($(value).val()));
                                         });
-                                        $.post("/inc/ajax_requests.php", {
+                                        $.post("/inc/ajax_requests.inc.php", {
                                             data: 'create-participant-from-csv',
                                             items: JSON.stringify(json_items),
                                             exam_event_id: exam_event_id
@@ -343,7 +343,7 @@ $(document).ready(function(){
                                         $.each($('.book-check-participant:checked'), function(index, value){
                                             json_items.push(jQuery.parseJSON($(value).val()));
                                         });
-                                        $.post("/inc/ajax_requests.php", {
+                                        $.post("/inc/ajax_requests.inc.php", {
                                             data: 'book-participant-from-csv',
                                             items: JSON.stringify(json_items),
                                             exam_event_id: exam_event_id

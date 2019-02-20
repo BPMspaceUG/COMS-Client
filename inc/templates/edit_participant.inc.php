@@ -49,7 +49,7 @@
                     <label for="country_of_birth" class="col-lg-4 col-sm-6">Country of Birth</label>
                     <select id="country_of_birth" name="country_of_birth" class="form-control col-lg-8">
                         <option value="<?php echo $country_of_birth; ?>" selected><?php echo $country_of_birth; ?></option>
-                        <?php require_once($_SERVER['DOCUMENT_ROOT'] . '/inc/iso_3166_country_codes/array_of_countries.php');
+                        <?php require_once($_SERVER['DOCUMENT_ROOT'] . '/inc/iso_3166_country_codes/array_of_countries.inc.php');
                         foreach ($countries as $country) {
                             echo "<option value='" . $country . "'>" . $country . "</option>";
                         } ?>

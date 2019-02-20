@@ -5,11 +5,10 @@
 <script src="//stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
 <link rel="stylesheet" type="text/css" href="/css/main.css"/>
-<link rel="stylesheet" type="text/css" href="//ico-cert.org/assets/css/style.css"/>
 
 <?php
 session_start();
-require_once($_SERVER['DOCUMENT_ROOT'] . '/inc/captcha/captcha.php');
+require_once($_SERVER['DOCUMENT_ROOT'] . '/inc/captcha/captcha.inc.php');
 $url_array = explode('/', $_SERVER['REQUEST_URI']);
 if (count($url_array) < 2) {
     header('Location: //' . $_SERVER['SERVER_NAME'] . '/404.php');
@@ -481,7 +480,7 @@ function unique_multidim_array($array, $key) {
 
 if (!isset($_SESSION['user_id']) || $_SESSION['user_id'] !== $PARTID) {
     generateImage($expression->n1.' + '.$expression->n2.' =', $captchaImage);
-    require_once($_SERVER['DOCUMENT_ROOT'].'/templates/login.php');
+    require_once($_SERVER['DOCUMENT_ROOT'] . '/inc/templates/login.inc.php');
 } else {
     $exams_json = api(array("cmd" => "read", "paramJS" => array("table" => "v_csvexport_trainingorg_exam", "where" => "a.coms_training_organisation_id = $PARTID")));
     $exams = json_decode($exams_json, true);
@@ -506,5 +505,5 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_id'] !== $PARTID) {
     $all_participants = json_decode(api(array("cmd" => "read", "paramJS" => array("table" => "v_coms_participant__exam_event", "where" => "coms_training_org_id = $_SESSION[user_id]"))), true);
     $all_participants = unique_multidim_array($all_participants, 'coms_participant_id');
     $all_participants = json_encode($all_participants);
-    require_once($_SERVER['DOCUMENT_ROOT'] . '/templates/main.php');
+    require_once($_SERVER['DOCUMENT_ROOT'] . '/inc/templates/main.inc.php');
 }

@@ -119,7 +119,7 @@ $(document).ready( function () {
         if (!confirm("Do you really want to cancel the event " + $(this).data('coms_exam_event_name'))){
             return false;
         }
-        $.post("/inc/ajax_requests.php", {
+        $.post("/inc/ajax_requests.inc.php", {
             data: 'cancel-exam-event',
             exam_id: $(this).data('coms_exam_event_id')
         },function(data) {
@@ -212,7 +212,7 @@ $(document).ready( function () {
     });
 
     $('.edit-exam-event').click(function(){
-        $.post("/inc/ajax_requests.php", {
+        $.post("/inc/ajax_requests.inc.php", {
             data: 'edit-exam-event',
             exam_event_id: $(this).data('coms_exam_event_id'),
             trexor: trexor_json,
