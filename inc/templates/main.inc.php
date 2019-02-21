@@ -1,6 +1,7 @@
 <div class="modal fade" id="main_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
         <div class="modal-content">
+            <img src="https://via.placeholder.com/180x180.png?text=LOGO" class="logo"/>
             <?php if (isset($error)) : ?>
                 <div class="alert alert-danger" role="alert"><?php echo $error; ?></div>
             <?php elseif (isset($success)) : ?>

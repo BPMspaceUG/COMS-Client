@@ -1,28 +1,12 @@
-<script src="//code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/v/dt/dt-1.10.18/datatables.min.css"/>
-<script type="text/javascript" src="//cdn.datatables.net/v/dt/dt-1.10.18/datatables.min.js"></script>
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-<script src="//stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="//use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
-<link rel="stylesheet" type="text/css" href="/css/main.css"/>
-
 <?php
 session_start();
 require_once($_SERVER['DOCUMENT_ROOT'] . '/inc/captcha/captcha.inc.php');
-$url_array = explode('/', $_SERVER['REQUEST_URI']);
-if (count($url_array) < 2) {
-    header('Location: //' . $_SERVER['SERVER_NAME'] . '/404.php');
-    exit();
-}
-$url_array = array_reverse($url_array);
-$PARTID = $url_array[0];
-$PARTID_MD5 = $url_array[1];
 if (isset($_POST['ato_logout'])) {
     session_destroy();
     header('Location: //' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI']);
     exit();
 }
-if (isset($_POST['ato_login'])) {
+if (isset($_POST['login'])) {
     if (file_exists($_POST['captcha-image'])) unlink($_POST['captcha-image']);
     if (!$_POST['booking-pw']) {
         $error = 'Please fill all the fields.';
@@ -38,6 +22,7 @@ if (isset($_POST['ato_login'])) {
             if ($db_content) {
                 $_SESSION['ato_name'] = $db_content[0]['coms_training_organisation_name'];
                 $_SESSION['user_id'] = $db_content[0]['coms_training_organisation_id'];
+                $_SESSION['user_type'] = $USER_TYPE;
             } else {
                 $error = 'Wrong password';
             }
@@ -268,21 +253,6 @@ if (isset($_POST['add_anonymous_exams'])) {
             $success = "Additional exam info added.";
         }
     }
-}
-
-//check validity of URL
-if (ctype_xdigit($PARTID_MD5) && strlen($PARTID_MD5) == 32 && strlen($PARTID) == 6 && $PARTID_MD5 == (md5($PARTID))) {
-    // MatrNr Postfix calculate
-    $PARTID_MD5_first5 = substr($PARTID_MD5, 0, 5);
-    $matNr_postfix = substr(base_convert($PARTID_MD5_first5, 16, 10), 0, 3);
-    //echo "PostFI MatrkNr = ".$matNr_postfix."<br/>";
-    $matNr = $PARTID.substr(base_convert($PARTID_MD5_first5, 16, 10), 0, 3);
-    $matNr = str_pad(strtoupper(base_convert($matNr, 10, 32)), 8, "0", STR_PAD_LEFT);
-    //echo $actionurl;
-}
-else {
-    header('Location: //' . $_SERVER['SERVER_NAME'] . '/404.php');
-    exit();
 }
 
 /**

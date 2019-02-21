@@ -4,8 +4,8 @@
             <?php if (isset($error)) { ?>
                 <div class="alert alert-danger" role="alert"><?php echo $error; ?></div>
             <?php } ?>
-            <h2>Login ATO</h2>
-            <form method="post" action="" id="ato_login" class="needs-validation">
+            <h2>Login <?php echo $USER_TYPE; ?></h2>
+            <form method="post" action="" id="login" class="needs-validation">
                 <div class="form-group row">
                     <label for="booking-pw" class="col-lg-4 col-sm-6">Password</label>
                     <input type="password" name="booking-pw" class="form-control col-lg-8" required />
@@ -17,7 +17,7 @@
                     <img src="<?php echo '/' . $captchaImage; ?>" class="captcha-image col-lg-4 col-sm-4" />
                     <input type="text" name="result" class="form-control col-lg-4 col-sm-8" required />
                 </div>
-                <input type="submit" class="login-submit" value="Login" name="ato_login" />
+                <input type="submit" class="login-submit" value="Login" name="login" />
             </form>
         </div>
     </div>
