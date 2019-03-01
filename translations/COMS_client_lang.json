@@ -1,0 +1,7 @@
+{
+    "test": {
+        "en": {"name": "English", "text": "eng test text"},
+        "de": {"name": "Deutsch", "text": "de test text"}
+    }
+}
+

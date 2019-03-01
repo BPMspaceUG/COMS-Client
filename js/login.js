@@ -3,4 +3,8 @@ $(document).ready( function () {
         backdrop: 'static',
         keyboard: false
     });
+    $('#participant_login_modal').modal({
+        backdrop: 'static',
+        keyboard: false
+    });
 });

@@ -6,12 +6,16 @@
     padding: 50px;
 }
 
+#main_participant_modal .modal-content, #participant_login_modal .modal-content {
+    padding: 1rem;
+}
+
 #main_modal a {
     color: #000;
     text-decoration: none;
 }
 
-#create_event_modal .modal-content, #edit_event_modal .modal-content, #add_participant_modal .modal-content, #edit_participant_modal .modal-content, #import_participants_modal .modal-content {
+#create_event_modal .modal-content, #edit_event_modal .modal-content, #add_participant_modal .modal-content, #edit_participant_modal .modal-content, #import_participants_modal .modal-content, #change_language_modal .modal-content {
     padding: 30px;
 }
 
@@ -60,25 +64,51 @@
     border: none;
 }
 
-.nav-tabs a {
+#main_participant_modal table tbody tr {
+    border-top: 1px solid #dee2e6;
+}
+
+#main_participant_modal table th, #main_participant_modal table td {
     padding: 10px;
 }
 
-.nav-tabs {
+.ato-nav a {
+    padding: 10px;
+}
+
+.ato-nav {
     border-bottom: none;
     padding-left: 25px;
 }
 
-.nav-tabs li {
+.ato-nav li {
     background-color: #bbb;
     border: 1px solid #111;
     margin-bottom: -1px;
     z-index: 9;
 }
 
-.nav-tabs li.active {
+.ato-nav li.active {
     background-color: #fff;
     border-bottom-color: transparent;
+}
+
+.participant-nav .nav-item {
+    margin-bottom: -7px;
+}
+
+.participant-nav li a:hover {
+    background-color: #eee;
+    border-color: #eee #eee #ddd;
+    text-decoration: none;
+}
+
+.participant-nav li.active {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-bottom-color: transparent;
+    color: #555;
+    cursor: default;
 }
 
 .events-buttons a {
@@ -240,8 +270,8 @@ button {
     position: absolute;
 }
 
-.logo {
-    width: 180px;
+.img-responsive {
+    max-width: 100%;
 }
 
 @media only screen and (max-width: 992px) {

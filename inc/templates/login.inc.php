@@ -14,8 +14,8 @@
                     <input type="hidden" name="code" value="<?php echo $code; ?>" />
                     <input type="hidden" name="captcha-image" value="<?php echo $captchaImage; ?>" />
                     <label for="result" class="col-lg-4">Captcha</label>
-                    <img src="<?php echo '/' . $captchaImage; ?>" class="captcha-image col-lg-4 col-sm-4" />
-                    <input type="text" name="result" class="form-control col-lg-4 col-sm-8" required />
+                    <img src="<?php echo '/' . $captchaImage; ?>" class="captcha-image col-lg-4 col-4" />
+                    <input type="text" name="result" class="form-control col-lg-4 col-8" required />
                 </div>
                 <input type="submit" class="login-submit" value="Login" name="login" />
             </form>

@@ -1,17 +1,26 @@
 <div class="modal fade" id="main_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
         <div class="modal-content">
-            <img src="https://via.placeholder.com/180x180.png?text=LOGO" class="logo"/>
             <?php if (isset($error)) : ?>
                 <div class="alert alert-danger" role="alert"><?php echo $error; ?></div>
             <?php elseif (isset($success)) : ?>
                 <div class="alert alert-success" role="alert"><?php echo $success; ?></div>
             <?php endif; ?>
-            <h1><?php echo $_SESSION['ato_name'] . ' (' . $PARTID . ')'; ?></h1>
-            <form method="post" action="" id="ato_logout">
-                <input type="submit" value="Logout" name="ato_logout" />
-            </form>
-            <ul class="nav nav-tabs">
+
+            <div class="row mb-5">
+                <div class="col-lg-2">
+                    <a href="/"><img class="img-fluid" style="margin: 0 auto;" src="https://via.placeholder.com/180x180.png?text=LOGO" alt=""></a>
+                </div>
+                <div class="col-lg-8">
+                    <h1><?php echo $_SESSION['name'] . ' (' . $PARTID . ')'; ?></h1>
+                </div>
+                <div class="col-lg-2 text-right">
+                    <form method="post" action="" id="ato_logout">
+                        <input type="submit" value="Logout" name="ato_logout" />
+                    </form>
+                </div>
+            </div>
+            <ul class="nav nav-tabs ato-nav">
                 <li id="exam_event" class="table-switch-button active"><a href="#">Exam Event</a></li>
                 <li id="exams" class="table-switch-button"><a href="#">Exam</a></li>
                 <li id="trainer" class="table-switch-button"><a href="#">Trainer</a></li>

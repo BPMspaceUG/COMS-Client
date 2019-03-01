@@ -20,7 +20,7 @@ if (isset($_POST['login'])) {
             $db_content = json_decode(api(array("cmd" => "read", "paramJS" => array("table" => "v_csvexport_trainingorg",
                 "where" => "a.coms_training_organisation_passwd_hash = '$bookingpw' && a.coms_training_organisation_id = $PARTID"))), true);
             if ($db_content) {
-                $_SESSION['ato_name'] = $db_content[0]['coms_training_organisation_name'];
+                $_SESSION['name'] = $db_content[0]['coms_training_organisation_name'];
                 $_SESSION['user_id'] = $db_content[0]['coms_training_organisation_id'];
                 $_SESSION['user_type'] = $USER_TYPE;
             } else {
@@ -448,7 +448,7 @@ function unique_multidim_array($array, $key) {
     return $temp_array;
 }
 
-if (!isset($_SESSION['user_id']) || $_SESSION['user_id'] !== $PARTID) {
+if (!isset($_SESSION['user_id']) || $_SESSION['user_id'] !== $PARTID  || $_SESSION['user_type'] != 'ato') {
     generateImage($expression->n1.' + '.$expression->n2.' =', $captchaImage);
     require_once($_SERVER['DOCUMENT_ROOT'] . '/inc/templates/login.inc.php');
 } else {

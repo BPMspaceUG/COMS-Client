@@ -1,7 +1,7 @@
 <div class="modal fade" id="show_participation_list_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
-            <img src="https://via.placeholder.com/180x180.png?text=LOGO" class="logo"/>
+            <img src="https://via.placeholder.com/180x180.png?text=LOGO" class="img-fluid"/>
             <h3><?php echo $heading; ?></h3>
             <div class='participation-nav'>
                 <?php if ($exam_event_state_id == 147) : ?>
@@ -116,7 +116,7 @@
                     } ?>
                 </div>
                 <div class="form-group row">
-                    <label for="language" class="col-lg-4 col-sm-6">Gender</label>
+                    <label for="gender" class="col-lg-4 col-sm-6">Gender</label>
                     <?php foreach ($genders as $gender) {
                         echo "<input type='radio' name='gender' class='radio-button' value='" . $gender . "'/><span class='text-lowercase'>" . $gender . "</span>";
                     } ?>
