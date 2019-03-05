@@ -1,7 +1,11 @@
 <div class="modal fade" id="show_participation_list_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
-            <img src="https://via.placeholder.com/180x180.png?text=LOGO" class="img-fluid"/>
+            <div class="row">
+                <div class="col-lg-2">
+                    <a href="/"><img class="img-fluid" src="https://via.placeholder.com/180x180.png?text=LOGO" alt=""></a>
+                </div>
+            </div>
             <h3><?php echo $heading; ?></h3>
             <div class='participation-nav'>
                 <?php if ($exam_event_state_id == 147) : ?>

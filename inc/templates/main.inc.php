@@ -9,7 +9,7 @@
 
             <div class="row mb-5">
                 <div class="col-lg-2">
-                    <a href="/"><img class="img-fluid" style="margin: 0 auto;" src="https://via.placeholder.com/180x180.png?text=LOGO" alt=""></a>
+                    <a href="/"><img class="img-fluid" src="https://via.placeholder.com/180x180.png?text=LOGO" alt=""></a>
                 </div>
                 <div class="col-lg-8">
                     <h1><?php echo $_SESSION['name'] . ' (' . $PARTID . ')'; ?></h1>
