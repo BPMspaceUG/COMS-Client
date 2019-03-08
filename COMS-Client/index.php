@@ -1,4 +1,3 @@
-test coms
 <?php
 require_once(__DIR__ . '/inc/header.inc.php');
 define('__ROOT__', dirname(__FILE__));
