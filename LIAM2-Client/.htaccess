@@ -1,0 +1,17 @@
+Options +FollowSymLinks
+RewriteEngine On
+
+#Prevent Users From Accessing .inc.php files in .htaccess
+<Files ~ ".inc.php$">
+Order allow,deny
+Deny from all
+</Files>
+
+
+# check if file exist
+RewriteCond %{REQUEST_FILENAME} !-f
+# check if directory exist
+RewriteCond %{REQUEST_FILENAME} !-d
+# if not redirect to /
+RewriteRule ^ / [L]
+ErrorDocument 404 /404
