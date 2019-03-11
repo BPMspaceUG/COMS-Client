@@ -1,3 +1,0 @@
-*.secret.*
-.idea*
-/inc/captcha/*.png
