@@ -40,4 +40,4 @@
         </div>
     </div>
 </div>
-<script type="text/javascript" src="/js/login.js"></script>
+<script type="text/javascript" src="/js/COMS-Client_login.js"></script>

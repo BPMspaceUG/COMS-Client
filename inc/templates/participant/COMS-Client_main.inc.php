@@ -271,4 +271,4 @@
         </div>
     </div>
 </div>
-<script type="text/javascript" src="/js/participant.js"></script>
+<script type="text/javascript" src="/js/COMS-Client_participant.js"></script>
