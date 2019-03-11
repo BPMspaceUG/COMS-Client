@@ -7,4 +7,4 @@
 <link rel="stylesheet" type="text/css" href="https://ico-cert.org/assets/css/style.css"/>
 <link rel="stylesheet" href="//ico-cert.org/assets/css/theme-colors/dark-blue.css" id="style_color">
 <link rel="stylesheet" href="//ico-cert.org/assets/css/theme-skins/dark.css">
-<link rel="stylesheet" type="text/css" href="/css/COMS-Client_main.css"/>
+<link rel="stylesheet" type="text/css" href="/css/COMS_Client_main.css"/>

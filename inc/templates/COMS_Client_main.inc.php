@@ -113,5 +113,5 @@
     var trexor_json = <?php echo $trexor; ?>;
     var all_participants = <?php echo $all_participants; ?>;
 </script>
-<script type="text/javascript" src="/js/COMS-Client_coms_client.js"></script>
-<script type="text/javascript" src="/js/COMS-Client_participation.js"></script>
+<script type="text/javascript" src="/js/COMS_Client_coms_client.js"></script>
+<script type="text/javascript" src="/js/COMS_Client_participation.js"></script>

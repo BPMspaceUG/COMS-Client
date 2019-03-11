@@ -1,7 +1,7 @@
 <?php
 session_start();
-require_once($_SERVER['DOCUMENT_ROOT'] . '/inc/COMS-Client_api.secret.inc.php');
-require_once($_SERVER['DOCUMENT_ROOT'] . '/inc/COMS-Client_api.inc.php');
+require_once($_SERVER['DOCUMENT_ROOT'] . '/inc/COMS_Client_api.secret.inc.php');
+require_once($_SERVER['DOCUMENT_ROOT'] . '/inc/COMS_Client_api.inc.php');
 
 /**
  * @param $array
@@ -62,7 +62,7 @@ if (isset($_POST['data'])) {
             $state_id = $exam_event_data[0]['event_state_id'];
             $event_date = $exam_event_data[0]['coms_exam_event_start_date'];
             $exam_event_info = $exam_event_data[0]['coms_exam_event_info'];
-            require_once($_SERVER['DOCUMENT_ROOT'] . '/inc/templates/COMS-Client_edit_exam_event.inc.php');
+            require_once($_SERVER['DOCUMENT_ROOT'] . '/inc/templates/COMS_Client_edit_exam_event.inc.php');
         }
     }
     if ($_POST['data'] == 'show-participation-list') {
@@ -87,7 +87,7 @@ if (isset($_POST['data'])) {
             28,
             30
         );
-        require_once($_SERVER['DOCUMENT_ROOT'] . '/inc/templates/COMS-Client_participation.inc.php');
+        require_once($_SERVER['DOCUMENT_ROOT'] . '/inc/templates/COMS_Client_participation.inc.php');
 
     }
     if ($_POST['data'] == 'edit-participant') {
@@ -112,7 +112,7 @@ if (isset($_POST['data'])) {
             $place_of_birth = $participant[0]['coms_participant_placeofbirth'];
             $country_of_birth = $participant[0]['coms_participant_birthcountry'];
         }
-        require_once($_SERVER['DOCUMENT_ROOT'] . '/inc/templates/COMS-Client_edit_participant.inc.php');
+        require_once($_SERVER['DOCUMENT_ROOT'] . '/inc/templates/COMS_Client_edit_participant.inc.php');
     }
     if ($_POST['data'] == 'search-participant') {
         $exam_event_id = htmlspecialchars($_POST['exam_event_id']);
@@ -132,7 +132,7 @@ if (isset($_POST['data'])) {
 
         /*$participants = json_decode(api(array("cmd" => "read", "paramJS" => array("table" => "v_coms_participant__exam_event", "where" => "coms_training_org_id = $_SESSION[user_id] && coms_exam_event_id != $exam_event_id"))), true);
         $participants = unique_multidim_array($participants, 'coms_participant_id');*/
-        //require_once($_SERVER['DOCUMENT_ROOT'] . '/inc/templates/COMS-Client_search_participant.inc.php');
+        //require_once($_SERVER['DOCUMENT_ROOT'] . '/inc/templates/COMS_Client_search_participant.inc.php');
 
         $participants = json_decode(api(array("cmd" => "read", "paramJS" => array("table" => "v_coms_participant__exam_event", "where" => "coms_training_org_id = $_SESSION[user_id] && coms_exam_event_id = $exam_event_id"))), true);
         $arr = array();
@@ -321,6 +321,6 @@ if (isset($_POST['data'])) {
     if (!$error_records && !$book_records && !$create_records) {
         echo false;
     } else {
-        require_once($_SERVER['DOCUMENT_ROOT'] . '/inc/templates/COMS-Client_import_participants.inc.php');
+        require_once($_SERVER['DOCUMENT_ROOT'] . '/inc/templates/COMS_Client_import_participants.inc.php');
     }
 }

@@ -1,8 +1,8 @@
 <?php
-require_once(__DIR__ . '/inc/COMS-Client_header.inc.php');
+require_once(__DIR__ . '/inc/COMS_Client_header.inc.php');
 define('__ROOT__', dirname(__FILE__));
-require_once(__DIR__.'/inc/COMS-Client_api.secret.inc.php');
-require_once(__DIR__.'/inc/COMS-Client_api.inc.php');
+require_once(__DIR__.'/inc/COMS_Client_api.secret.inc.php');
+require_once(__DIR__.'/inc/COMS_Client_api.inc.php');
 
 $url_array = explode('/', $_SERVER['REQUEST_URI']);
 if (count($url_array) < 2) {
@@ -25,9 +25,9 @@ else {
 }
 
 if ($USER_TYPE == 'ato' && !isset($error_404)) {
-    require_once(__DIR__ . '/inc/COMS-Client_load_ato_data.inc.php');
+    require_once(__DIR__ . '/inc/COMS_Client_load_ato_data.inc.php');
 } elseif ($USER_TYPE == 'participant' && !isset($error_404)) {
-    require_once(__DIR__ . '/inc/COMS-Client_load_participant_data.inc.php');
+    require_once(__DIR__ . '/inc/COMS_Client_load_participant_data.inc.php');
 } else {
     $error_404 = true;
 }

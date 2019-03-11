@@ -450,7 +450,7 @@ function unique_multidim_array($array, $key) {
 
 if (!isset($_SESSION['user_id']) || $_SESSION['user_id'] !== $PARTID  || $_SESSION['user_type'] != 'ato') {
     generateImage($expression->n1.' + '.$expression->n2.' =', $captchaImage);
-    require_once($_SERVER['DOCUMENT_ROOT'] . '/inc/templates/COMS-Client_login.inc.php');
+    require_once($_SERVER['DOCUMENT_ROOT'] . '/inc/templates/COMS_Client_login.inc.php');
 } else {
     $exams_json = api(array("cmd" => "read", "paramJS" => array("table" => "v_csvexport_trainingorg_exam", "where" => "a.coms_training_organisation_id = $PARTID")));
     $exams = json_decode($exams_json, true);
@@ -475,5 +475,5 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_id'] !== $PARTID  || $_SESSI
     $all_participants = json_decode(api(array("cmd" => "read", "paramJS" => array("table" => "v_coms_participant__exam_event", "where" => "coms_training_org_id = $_SESSION[user_id]"))), true);
     $all_participants = unique_multidim_array($all_participants, 'coms_participant_id');
     $all_participants = json_encode($all_participants);
-    require_once($_SERVER['DOCUMENT_ROOT'] . '/inc/templates/COMS-Client_main.inc.php');
+    require_once($_SERVER['DOCUMENT_ROOT'] . '/inc/templates/COMS_Client_main.inc.php');
 }

@@ -79,7 +79,7 @@ if (isset($_POST['change_participant_language'])) {
  * @throws Exception
  */
 function translate($key, $language) {
-    $coms_client_lang = file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/translations/COMS-Client_lang.json');
+    $coms_client_lang = file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/translations/COMS_Client_lang.json');
     $coms_client_lang = json_decode($coms_client_lang);
     try {
         if (isset($coms_client_lang->$key->$language->text)) {
@@ -98,7 +98,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_id'] !== $PARTID || $_SESSIO
         "where" => "a.coms_participant_md5 = '$PARTID_MD5' && a.coms_participant_id = $PARTID"))), true);
     if ($db_content[0]['coms_participant_LIAM_id']) {
         generateImage($expression->n1.' + '.$expression->n2.' =', $captchaImage);
-        require_once($_SERVER['DOCUMENT_ROOT'] . '/inc/templates/participant/COMS-Client_login.inc.php');
+        require_once($_SERVER['DOCUMENT_ROOT'] . '/inc/templates/participant/COMS_Client_login.inc.php');
     } else {
         echo 'redirect to LIAM2';
     }
@@ -136,5 +136,5 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_id'] !== $PARTID || $_SESSIO
             "where" => "a.coms_participant_id = $_SESSION[user_id] && a.coms_certificate_type_id != 6 && state_id in (73, 74, 75)"
         )
     )), true);
-    require_once($_SERVER['DOCUMENT_ROOT'] . '/inc/templates/participant/COMS-Client_main.inc.php');
+    require_once($_SERVER['DOCUMENT_ROOT'] . '/inc/templates/participant/COMS_Client_main.inc.php');
 }
