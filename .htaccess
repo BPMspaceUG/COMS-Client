@@ -13,5 +13,5 @@ RewriteCond %{REQUEST_FILENAME} !-f
 # check if directory exist
 RewriteCond %{REQUEST_FILENAME} !-d
 # if not redirect to /
-RewriteRule ^ / [L]
+RewriteRule ^ ./ [L]
 ErrorDocument 404 /404
